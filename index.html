@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>小倉百人一首 競技システム</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>小倉百人一首 競技システム</h1>
+            <div class="controls">
+                <button id="randomBtn" class="btn btn-primary">ランダム選択</button>
+                <button id="readBtn" class="btn btn-secondary">読み上げ</button>
+                <button id="stopBtn" class="btn btn-danger">停止</button>
+                <button id="showAnswerBtn" class="btn btn-info">答えを表示</button>
+            </div>
+            
+            <div class="speech-controls">
+                <div class="speech-rate-control">
+                    <label for="speechRate">読み上げ速度:</label>
+                    <input type="range" id="speechRate" min="0.3" max="2.0" step="0.1" value="0.8">
+                    <span id="speechRateValue">0.8</span>
+                    <div class="rate-labels">
+                        <span>遅い</span>
+                        <span>普通</span>
+                        <span>速い</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <div class="poem-display">
+                <div id="poemCard" class="poem-card">
+                    <div class="poem-number">
+                        <span id="poemNumber">-</span>番
+                    </div>
+                    <div class="poem-author">
+                        <span id="poemAuthor">歌人を選択してください</span>
+                    </div>
+                    <div class="poem-text">
+                        <div class="kami-no-ku">
+                            <span id="kamiNoKu">上の句が表示されます</span>
+                        </div>
+                        <div class="shimo-no-ku" id="shimoNoKuDiv" style="display: none;">
+                            <span id="shimoNoKu">下の句が表示されます</span>
+                        </div>
+                    </div>
+                    <div class="poem-reading" id="poemReading" style="display: none;">
+                        <strong>読み：</strong><span id="readingText"></span>
+                    </div>
+                    <div class="poem-meaning" id="poemMeaning" style="display: none;">
+                        <strong>意味：</strong><span id="meaningText"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timer-section">
+                <div class="timer" id="timer">00:00</div>
+                <div class="timer-controls">
+                    <button id="startTimerBtn" class="btn btn-success">タイマー開始</button>
+                    <button id="pauseTimerBtn" class="btn btn-warning">一時停止</button>
+                    <button id="resetTimerBtn" class="btn btn-secondary">リセット</button>
+                </div>
+            </div>
+
+            <div class="poem-list">
+                <h3>歌一覧</h3>
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="歌人名や歌で検索...">
+                </div>
+                <div id="poemList" class="list-container">
+                    <!-- 歌一覧がここに表示されます -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="karuta-data.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,673 @@
+/* 小倉百人一首競技システム - 伝統的和風デザイン */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Noto Serif CJK JP', 'Yu Mincho', 'YuMincho', '游明朝体', 'ヒラギノ明朝 Pro', serif;
+    line-height: 1.8;
+    color: #2c1810;
+    background: 
+        radial-gradient(circle at 20% 80%, rgba(120, 89, 67, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(184, 134, 89, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(139, 69, 19, 0.2) 0%, transparent 50%),
+        linear-gradient(135deg, #f4f2e8 0%, #e8dcc0 50%, #d4c4a0 100%);
+    min-height: 100vh;
+    padding: 20px;
+    position: relative;
+}
+
+/* 和風背景パターン */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        repeating-linear-gradient(
+            45deg,
+            transparent,
+            transparent 50px,
+            rgba(139, 69, 19, 0.03) 50px,
+            rgba(139, 69, 19, 0.03) 52px
+        );
+    pointer-events: none;
+    z-index: -1;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: 
+        linear-gradient(145deg, #faf8f0 0%, #f5f1e8 100%);
+    border-radius: 12px;
+    box-shadow: 
+        0 20px 40px rgba(139, 69, 19, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9),
+        0 0 0 1px rgba(139, 69, 19, 0.1);
+    overflow: hidden;
+    border: 3px solid #8b4513;
+    position: relative;
+}
+
+.container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        repeating-linear-gradient(
+            90deg,
+            transparent 0px,
+            rgba(139, 69, 19, 0.02) 1px,
+            transparent 2px,
+            transparent 20px
+        ),
+        repeating-linear-gradient(
+            0deg,
+            transparent 0px,
+            rgba(139, 69, 19, 0.02) 1px,
+            transparent 2px,
+            transparent 20px
+        );
+    pointer-events: none;
+}
+
+/* ヘッダー - 和風デザイン */
+header {
+    background: 
+        linear-gradient(135deg, #8b4513 0%, #a0522d 50%, #cd853f 100%);
+    color: #faf8f0;
+    padding: 40px 30px;
+    text-align: center;
+    position: relative;
+    border-bottom: 4px solid #654321;
+}
+
+header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        repeating-linear-gradient(
+            45deg,
+            rgba(255, 255, 255, 0.1) 0px,
+            rgba(255, 255, 255, 0.1) 2px,
+            transparent 2px,
+            transparent 10px
+        );
+    pointer-events: none;
+}
+
+header h1 {
+    font-size: 2.8rem;
+    margin-bottom: 20px;
+    text-shadow: 
+        2px 2px 4px rgba(0, 0, 0, 0.5),
+        0 0 10px rgba(255, 255, 255, 0.3);
+    font-weight: bold;
+    letter-spacing: 0.1em;
+    position: relative;
+    z-index: 1;
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 1;
+}
+
+/* 読み上げ速度コントロール */
+.speech-controls {
+    margin-top: 25px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    position: relative;
+    z-index: 1;
+}
+
+.speech-rate-control {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.speech-rate-control label {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #faf8f0;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.speech-rate-control input[type="range"] {
+    width: 300px;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.speech-rate-control input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: linear-gradient(135deg, #daa520, #ffd700);
+    border: 2px solid #8b4513;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.speech-rate-control input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: linear-gradient(135deg, #daa520, #ffd700);
+    border: 2px solid #8b4513;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+#speechRateValue {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #ffd700;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    background: rgba(139, 69, 19, 0.3);
+    padding: 5px 12px;
+    border-radius: 15px;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+.rate-labels {
+    display: flex;
+    justify-content: space-between;
+    width: 300px;
+    font-size: 0.9rem;
+    color: rgba(250, 248, 240, 0.8);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* 和風ボタンスタイル */
+.btn {
+    padding: 12px 24px;
+    border: 2px solid;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Noto Serif CJK JP', serif;
+    letter-spacing: 0.05em;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.btn:hover::before {
+    left: 100%;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(139, 69, 19, 0.3);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #8b4513, #a0522d);
+    border-color: #654321;
+    color: #faf8f0;
+    box-shadow: 0 4px 8px rgba(139, 69, 19, 0.3);
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #696969, #708090);
+    border-color: #2f4f4f;
+    color: #faf8f0;
+    box-shadow: 0 4px 8px rgba(47, 79, 79, 0.3);
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, #b22222, #dc143c);
+    border-color: #8b0000;
+    color: #faf8f0;
+    box-shadow: 0 4px 8px rgba(178, 34, 34, 0.3);
+}
+
+.btn-info {
+    background: linear-gradient(135deg, #4682b4, #5f9ea0);
+    border-color: #2f4f4f;
+    color: #faf8f0;
+    box-shadow: 0 4px 8px rgba(70, 130, 180, 0.3);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #228b22, #32cd32);
+    border-color: #006400;
+    color: #faf8f0;
+    box-shadow: 0 4px 8px rgba(34, 139, 34, 0.3);
+}
+
+.btn-warning {
+    background: linear-gradient(135deg, #daa520, #ffd700);
+    border-color: #b8860b;
+    color: #2c1810;
+    box-shadow: 0 4px 8px rgba(218, 165, 32, 0.3);
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* メインコンテンツ */
+main {
+    padding: 30px;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+}
+
+/* 歌表示カード - 伝統的かるた風 */
+.poem-display {
+    grid-column: 1 / -1;
+}
+
+.poem-card {
+    background: 
+        linear-gradient(145deg, #fefdf8 0%, #f8f6f0 100%);
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: 
+        0 15px 35px rgba(139, 69, 19, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9),
+        inset 0 -1px 0 rgba(139, 69, 19, 0.1);
+    border: 4px solid #8b4513;
+    margin-bottom: 30px;
+    position: relative;
+    overflow: hidden;
+}
+
+.poem-card::before {
+    content: '';
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    right: 15px;
+    bottom: 15px;
+    border: 2px solid rgba(139, 69, 19, 0.3);
+    border-radius: 8px;
+    pointer-events: none;
+}
+
+.poem-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 30% 30%, rgba(218, 165, 32, 0.1) 0%, transparent 40%),
+        radial-gradient(circle at 70% 70%, rgba(139, 69, 19, 0.05) 0%, transparent 40%);
+    pointer-events: none;
+}
+
+.poem-number {
+    text-align: center;
+    font-size: 1.4rem;
+    color: #8b4513;
+    margin-bottom: 15px;
+    font-weight: bold;
+    position: relative;
+    z-index: 1;
+}
+
+.poem-author {
+    text-align: center;
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: #2c1810;
+    margin-bottom: 30px;
+    padding: 15px 20px;
+    background: 
+        linear-gradient(135deg, rgba(218, 165, 32, 0.2) 0%, rgba(184, 134, 89, 0.2) 100%);
+    border-radius: 25px;
+    border: 2px solid rgba(139, 69, 19, 0.3);
+    position: relative;
+    z-index: 1;
+}
+
+.poem-text {
+    text-align: center;
+    margin-bottom: 25px;
+    position: relative;
+    z-index: 1;
+}
+
+.kami-no-ku, .shimo-no-ku {
+    font-size: 2rem;
+    line-height: 2;
+    margin: 20px 0;
+    padding: 25px;
+    border-radius: 12px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    position: relative;
+    font-family: 'Noto Serif CJK JP', 'Yu Mincho', serif;
+}
+
+.kami-no-ku {
+    background: 
+        linear-gradient(135deg, #fff8dc 0%, #f5deb3 100%);
+    color: #8b4513;
+    border: 3px solid #daa520;
+    box-shadow: 
+        inset 0 2px 4px rgba(218, 165, 32, 0.1),
+        0 4px 8px rgba(139, 69, 19, 0.2);
+}
+
+.shimo-no-ku {
+    background: 
+        linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%);
+    color: #2f4f4f;
+    border: 3px solid #4682b4;
+    box-shadow: 
+        inset 0 2px 4px rgba(70, 130, 180, 0.1),
+        0 4px 8px rgba(47, 79, 79, 0.2);
+}
+
+.poem-reading, .poem-meaning {
+    margin: 20px 0;
+    padding: 20px;
+    background: 
+        linear-gradient(135deg, rgba(245, 245, 220, 0.8) 0%, rgba(250, 235, 215, 0.8) 100%);
+    border-radius: 12px;
+    border: 2px solid rgba(139, 69, 19, 0.3);
+    position: relative;
+    z-index: 1;
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+
+.poem-reading strong, .poem-meaning strong {
+    color: #8b4513;
+    font-size: 1.2rem;
+}
+
+/* タイマーセクション - 和風 */
+.timer-section {
+    background: 
+        linear-gradient(145deg, #fefdf8 0%, #f8f6f0 100%);
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 
+        0 15px 35px rgba(139, 69, 19, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    border: 3px solid #8b4513;
+    text-align: center;
+    height: fit-content;
+    position: relative;
+}
+
+.timer {
+    font-size: 3.5rem;
+    font-weight: bold;
+    color: #2c1810;
+    margin-bottom: 25px;
+    padding: 25px;
+    background: 
+        linear-gradient(135deg, rgba(218, 165, 32, 0.1) 0%, rgba(184, 134, 89, 0.1) 100%);
+    border-radius: 12px;
+    border: 3px solid rgba(139, 69, 19, 0.3);
+    font-family: 'Noto Serif CJK JP', serif;
+    letter-spacing: 0.1em;
+}
+
+.timer-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* 歌一覧 - 和風 */
+.poem-list {
+    grid-column: 1 / -1;
+    background: 
+        linear-gradient(145deg, #fefdf8 0%, #f8f6f0 100%);
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 
+        0 15px 35px rgba(139, 69, 19, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    border: 3px solid #8b4513;
+    position: relative;
+}
+
+.poem-list h3 {
+    color: #2c1810;
+    margin-bottom: 25px;
+    font-size: 1.8rem;
+    font-weight: bold;
+    text-align: center;
+    padding: 15px;
+    background: 
+        linear-gradient(135deg, rgba(218, 165, 32, 0.2) 0%, rgba(184, 134, 89, 0.2) 100%);
+    border-radius: 10px;
+    border: 2px solid rgba(139, 69, 19, 0.3);
+}
+
+.search-box {
+    margin-bottom: 20px;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid rgba(139, 69, 19, 0.3);
+    border-radius: 10px;
+    font-size: 1rem;
+    background: rgba(255, 255, 255, 0.9);
+    transition: all 0.3s ease;
+    font-family: 'Noto Serif CJK JP', serif;
+}
+
+.search-box input:focus {
+    outline: none;
+    border-color: #8b4513;
+    box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.1);
+    background: #fff;
+}
+
+.list-container {
+    max-height: 400px;
+    overflow-y: auto;
+    border: 2px solid rgba(139, 69, 19, 0.3);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.poem-item {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid rgba(139, 69, 19, 0.1);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Noto Serif CJK JP', serif;
+}
+
+.poem-item:hover {
+    background: 
+        linear-gradient(135deg, rgba(218, 165, 32, 0.1) 0%, rgba(184, 134, 89, 0.1) 100%);
+    transform: translateX(5px);
+    border-left: 4px solid #8b4513;
+}
+
+.poem-item:last-child {
+    border-bottom: none;
+}
+
+.poem-item-number {
+    min-width: 60px;
+    font-weight: bold;
+    color: #8b4513;
+    text-align: center;
+    font-size: 1.2rem;
+    background: 
+        linear-gradient(135deg, rgba(218, 165, 32, 0.2) 0%, rgba(184, 134, 89, 0.2) 100%);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid rgba(139, 69, 19, 0.3);
+}
+
+.poem-item-content {
+    flex: 1;
+    margin-left: 20px;
+}
+
+.poem-item-author {
+    font-weight: bold;
+    color: #2c1810;
+    margin-bottom: 5px;
+    font-size: 1.1rem;
+}
+
+.poem-item-text {
+    color: #5d4e37;
+    font-size: 0.95rem;
+}
+
+/* レスポンシブデザイン - スマホ最適化 */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+    
+    .container {
+        margin: 5px;
+        border-radius: 15px;
+    }
+    
+    header {
+        padding: 25px 15px;
+    }
+    
+    header h1 {
+        font-size: 1.8rem;
+        margin-bottom: 15px;
+    }
+    
+    .controls {
+        gap: 8px;
+        justify-content: center;
+    }
+    
+    .btn {
+        padding: 12px 16px;
+        font-size: 0.9rem;
+        min-width: 80px;
+    }
+    
+    .speech-controls {
+        margin-top: 15px;
+        padding: 15px;
+    }
+    
+    .speech-rate-control input[type="range"] {
+        width: 250px;
+    }
+    
+    .rate-labels {
+        width: 250px;
+    }
+    
+    main {
+        padding: 20px;
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .poem-card {
+        padding: 25px;
+    }
+    
+    .kami-no-ku, .shimo-no-ku {
+        font-size: 1.4rem;
+        padding: 15px;
+    }
+    
+    .timer {
+        font-size: 2.5rem;
+        padding: 15px;
+    }
+    
+    .timer-controls {
+        flex-direction: column;
+    }
+    
+    .poem-list {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+    
+    header {
+        padding: 20px;
+    }
+    
+    header h1 {
+        font-size: 1.8rem;
+    }
+    
+    .poem-card {
+        padding: 20px;
+    }
+    
+    .kami-no-ku, .shimo-no-ku {
+        font-size: 1.2rem;
+        padding: 12px;
+    }
+    
+    .timer {
+        font-size: 2rem;
+    }
+}
