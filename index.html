@@ -16,7 +16,11 @@
             <div class="controls">
                 <button id="randomBtn" class="btn btn-primary">ランダム選択</button>
                 <button id="readBtn" class="btn btn-secondary">読み上げ</button>
+                <button id="readCompleteBtn" class="btn btn-secondary">全部読み上げ</button>
+                <button id="readShimoBtn" class="btn btn-secondary">下の句のみ</button>
+                <button id="pauseResumeBtn" class="btn btn-warning" style="display: none;">一時停止</button>
                 <button id="stopBtn" class="btn btn-danger">停止</button>
+                <button id="repeatBtn" class="btn btn-success">リピート</button>
                 <button id="showAnswerBtn" class="btn btn-info">答えを表示</button>
             </div>
             
@@ -67,6 +71,21 @@
                         <button id="resetTimerBtn" class="btn btn-secondary btn-sm">リセット</button>
                     </div>
                 </div>
+                
+                <div class="extra-controls">
+                    <div class="dark-mode-control">
+                        <label for="darkModeToggle">ダークモード:</label>
+                        <label class="switch">
+                            <input type="checkbox" id="darkModeToggle">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="history-control">
+                        <button id="showHistoryBtn" class="btn btn-info btn-sm">練習履歴</button>
+                        <button id="clearHistoryBtn" class="btn btn-secondary btn-sm">履歴クリア</button>
+                    </div>
+                </div>
             </div>
         </header>
 
@@ -112,6 +131,20 @@
                 </div>
                 <div id="poemList" class="list-container">
                     <!-- 歌一覧がここに表示されます -->
+                </div>
+            </div>
+            
+            <div id="historyModal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>練習履歴</h3>
+                        <button id="closeHistoryModal" class="btn btn-sm btn-secondary">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="historyList" class="history-list">
+                            <!-- 履歴が表示されます -->
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>

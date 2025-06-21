@@ -13,6 +13,9 @@ class KarutaSystem {
         this.currentSegments = []; // 現在の読み上げセグメント
         this.currentSegmentIndex = 0; // 現在のセグメントインデックス
         this.isPaused = false; // 一時停止状態
+        this.isRepeating = false; // リピート状態
+        this.isDarkMode = false; // ダークモード状態
+        this.practiceHistory = JSON.parse(localStorage.getItem('karutaHistory') || '[]'); // 練習履歴
         
         // 季節データマッピング
         this.seasonData = {
@@ -43,6 +46,7 @@ class KarutaSystem {
         this.initializeElements();
         this.bindEvents();
         this.displayPoemList();
+        this.initializeDarkMode();
     }
 
     initializeElements() {
@@ -50,8 +54,18 @@ class KarutaSystem {
         this.elements = {
             randomBtn: document.getElementById('randomBtn'),
             readBtn: document.getElementById('readBtn'),
+            readCompleteBtn: document.getElementById('readCompleteBtn'),
+            readShimoBtn: document.getElementById('readShimoBtn'),
+            pauseResumeBtn: document.getElementById('pauseResumeBtn'),
             stopBtn: document.getElementById('stopBtn'),
+            repeatBtn: document.getElementById('repeatBtn'),
             showAnswerBtn: document.getElementById('showAnswerBtn'),
+            darkModeToggle: document.getElementById('darkModeToggle'),
+            showHistoryBtn: document.getElementById('showHistoryBtn'),
+            clearHistoryBtn: document.getElementById('clearHistoryBtn'),
+            historyModal: document.getElementById('historyModal'),
+            closeHistoryModal: document.getElementById('closeHistoryModal'),
+            historyList: document.getElementById('historyList'),
             poemNumber: document.getElementById('poemNumber'),
             poemAuthor: document.getElementById('poemAuthor'),
             kamiNoKu: document.getElementById('kamiNoKu'),
@@ -84,8 +98,18 @@ class KarutaSystem {
         // ボタンイベントの設定
         this.elements.randomBtn.addEventListener('click', () => this.selectRandomPoem());
         this.elements.readBtn.addEventListener('click', () => this.readPoem());
+        this.elements.readCompleteBtn.addEventListener('click', () => this.readCompletePoem());
+        this.elements.readShimoBtn.addEventListener('click', () => this.readShimoOnly());
+        this.elements.pauseResumeBtn.addEventListener('click', () => this.togglePauseResume());
         this.elements.stopBtn.addEventListener('click', () => this.stopReading());
+        this.elements.repeatBtn.addEventListener('click', () => this.toggleRepeat());
         this.elements.showAnswerBtn.addEventListener('click', () => this.showAnswer());
+        
+        // 新機能のイベント
+        this.elements.darkModeToggle.addEventListener('change', () => this.toggleDarkMode());
+        this.elements.showHistoryBtn.addEventListener('click', () => this.showHistory());
+        this.elements.clearHistoryBtn.addEventListener('click', () => this.clearHistory());
+        this.elements.closeHistoryModal.addEventListener('click', () => this.closeHistory());
         
         // タイマーイベント
         this.elements.startTimerBtn.addEventListener('click', () => this.startTimer());
@@ -118,11 +142,13 @@ class KarutaSystem {
         const randomIndex = Math.floor(Math.random() * HYAKUNIN_ISSHU.length);
         this.currentPoem = HYAKUNIN_ISSHU[randomIndex];
         this.displayPoem(false); // 下の句を隠して表示
+        this.addToHistory(this.currentPoem);
     }
 
     selectPoem(index) {
         this.currentPoem = this.sortedPoems[index];
         this.displayPoem(false);
+        this.addToHistory(this.currentPoem);
     }
 
     displayPoem(showAll = false) {
@@ -175,8 +201,7 @@ class KarutaSystem {
         
         this.isReading = true;
         this.isPaused = false;
-        this.elements.readBtn.disabled = true;
-        this.elements.readBtn.textContent = '読み上げ中...';
+        this.updateReadingButtons(true);
 
         this.readSegments(this.currentSegments, 0);
     }
@@ -193,8 +218,14 @@ class KarutaSystem {
             this.isReading = false;
             this.isPaused = false;
             this.currentSegmentIndex = 0; // リセット
-            this.elements.readBtn.disabled = false;
-            this.elements.readBtn.textContent = '読み上げ';
+            this.updateReadingButtons(false);
+            
+            // リピートモードの場合は再度開始
+            if (this.isRepeating && this.currentPoem) {
+                setTimeout(() => {
+                    this.readPoemWithPauses();
+                }, 1000);
+            }
             return;
         }
         
@@ -244,14 +275,29 @@ class KarutaSystem {
         this.synth.speak(this.utterance);
     }
 
+    togglePauseResume() {
+        if (this.isReading && !this.isPaused) {
+            // 一時停止
+            if (this.synth.speaking) {
+                this.synth.cancel();
+            }
+            this.isPaused = true;
+            this.isReading = false;
+            this.elements.pauseResumeBtn.textContent = '再開';
+        } else if (this.isPaused) {
+            // 再開
+            this.resumeReading();
+        }
+    }
+    
     stopReading() {
         if (this.synth.speaking) {
             this.synth.cancel();
         }
         this.isReading = false;
-        this.isPaused = true; // 一時停止状態に設定
-        this.elements.readBtn.disabled = false;
-        this.elements.readBtn.textContent = '続きから再開';
+        this.isPaused = false;
+        this.currentSegmentIndex = 0;
+        this.updateReadingButtons(false);
     }
     
     resumeReading() {
@@ -263,8 +309,7 @@ class KarutaSystem {
         
         this.isReading = true;
         this.isPaused = false;
-        this.elements.readBtn.disabled = true;
-        this.elements.readBtn.textContent = '読み上げ中...';
+        this.updateReadingButtons(true);
         
         this.readSegments(this.currentSegments, this.currentSegmentIndex);
     }
@@ -472,6 +517,50 @@ class KarutaSystem {
         }
     }
 
+    readCompletePoem() {
+        if (!this.currentPoem) return;
+        
+        if (this.isReading) {
+            this.stopReading();
+        }
+        
+        // 上の句と下の句を組み合わせた完全な読みを作成
+        const completeReading = this.currentPoem.reading;
+        this.currentSegments = this.parseToSegments(completeReading);
+        this.currentSegmentIndex = 0;
+        
+        this.isReading = true;
+        this.isPaused = false;
+        this.elements.readCompleteBtn.disabled = true;
+        this.elements.readCompleteBtn.textContent = '読み上げ中...';
+
+        this.readSegments(this.currentSegments, 0);
+    }
+
+    readShimoOnly() {
+        if (!this.currentPoem) return;
+        
+        if (this.isReading) {
+            this.stopReading();
+        }
+        
+        // 下の句のみの読みを作成（読みの後半部分を抽出）
+        const fullReading = this.currentPoem.reading;
+        const segments = this.parseToSegments(fullReading);
+        
+        // 一般的に5句構成なので、後半3句を下の句として扱う
+        const shimoSegments = segments.slice(2); // 3句目から最後まで
+        this.currentSegments = shimoSegments;
+        this.currentSegmentIndex = 0;
+        
+        this.isReading = true;
+        this.isPaused = false;
+        this.elements.readShimoBtn.disabled = true;
+        this.elements.readShimoBtn.textContent = '読み上げ中...';
+
+        this.readSegments(this.currentSegments, 0);
+    }
+
     processPronunciation(text) {
         // 日本語の「は」の発音を制御
         // 助詞の「は」は「わ」として読ませる
@@ -506,9 +595,111 @@ class KarutaSystem {
         
         return processed;
     }
+    
+    updateReadingButtons(isReading) {
+        if (isReading) {
+            this.elements.readBtn.disabled = true;
+            this.elements.readCompleteBtn.disabled = true;
+            this.elements.readShimoBtn.disabled = true;
+            this.elements.pauseResumeBtn.style.display = 'inline-block';
+            this.elements.pauseResumeBtn.textContent = '一時停止';
+        } else {
+            this.elements.readBtn.disabled = false;
+            this.elements.readBtn.textContent = '読み上げ';
+            this.elements.readCompleteBtn.disabled = false;
+            this.elements.readCompleteBtn.textContent = '全部読み上げ';
+            this.elements.readShimoBtn.disabled = false;
+            this.elements.readShimoBtn.textContent = '下の句のみ';
+            this.elements.pauseResumeBtn.style.display = 'none';
+        }
+    }
+    
+    toggleRepeat() {
+        this.isRepeating = !this.isRepeating;
+        this.elements.repeatBtn.textContent = this.isRepeating ? 'リピート停止' : 'リピート';
+        this.elements.repeatBtn.className = this.isRepeating ? 'btn btn-warning' : 'btn btn-success';
+    }
+    
+    toggleDarkMode() {
+        this.isDarkMode = !this.isDarkMode;
+        document.body.className = this.isDarkMode ? 'dark-mode' : '';
+        localStorage.setItem('karutaDarkMode', this.isDarkMode);
+    }
+    
+    addToHistory(poem) {
+        const now = new Date();
+        const historyItem = {
+            poem: poem,
+            timestamp: now.toISOString(),
+            date: now.toLocaleDateString('ja-JP'),
+            time: now.toLocaleTimeString('ja-JP')
+        };
+        
+        // 同じ歌が既にある場合は除去
+        this.practiceHistory = this.practiceHistory.filter(item => item.poem.number !== poem.number);
+        
+        // 新しいアイテムを先頭に追加
+        this.practiceHistory.unshift(historyItem);
+        
+        // 最大100件まで保持
+        if (this.practiceHistory.length > 100) {
+            this.practiceHistory = this.practiceHistory.slice(0, 100);
+        }
+        
+        localStorage.setItem('karutaHistory', JSON.stringify(this.practiceHistory));
+    }
+    
+    showHistory() {
+        const historyHtml = this.practiceHistory.length > 0 ? 
+            this.practiceHistory.map(item => `
+                <div class="history-item" onclick="karutaSystem.selectPoemFromHistory(${item.poem.number})">
+                    <div class="history-poem-info">
+                        <span class="history-number">${item.poem.number}</span>
+                        <span class="history-author">${item.poem.author}</span>
+                        <span class="history-text">${item.poem.kamiNoKu}</span>
+                    </div>
+                    <div class="history-time">${item.date} ${item.time}</div>
+                </div>
+            `).join('') :
+            '<div class="no-history">練習履歴がありません</div>';
+            
+        this.elements.historyList.innerHTML = historyHtml;
+        this.elements.historyModal.style.display = 'flex';
+    }
+    
+    closeHistory() {
+        this.elements.historyModal.style.display = 'none';
+    }
+    
+    clearHistory() {
+        if (confirm('練習履歴をクリアしますか？')) {
+            this.practiceHistory = [];
+            localStorage.removeItem('karutaHistory');
+            this.elements.historyList.innerHTML = '<div class="no-history">練習履歴がありません</div>';
+        }
+    }
+    
+    selectPoemFromHistory(poemNumber) {
+        const poem = HYAKUNIN_ISSHU.find(p => p.number === poemNumber);
+        if (poem) {
+            this.currentPoem = poem;
+            this.displayPoem(false);
+            this.closeHistory();
+        }
+    }
+    
+    initializeDarkMode() {
+        const savedDarkMode = localStorage.getItem('karutaDarkMode');
+        if (savedDarkMode === 'true') {
+            this.isDarkMode = true;
+            this.elements.darkModeToggle.checked = true;
+            document.body.className = 'dark-mode';
+        }
+    }
 }
 
 // システム初期化
+let karutaSystem;
 document.addEventListener('DOMContentLoaded', () => {
-    new KarutaSystem();
+    karutaSystem = new KarutaSystem();
 });
