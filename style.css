@@ -130,42 +130,177 @@ header h1 {
     z-index: 1;
 }
 
-/* 読み上げ速度コントロール */
-.speech-controls {
+/* ヘッダーコントロール */
+.header-controls {
     margin-top: 25px;
-    padding: 20px;
-    background: rgba(255, 255, 255, 0.1);
+    padding: 25px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 15px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1.2fr;
+    gap: 25px;
+    align-items: center;
+    box-shadow: 
+        inset 0 2px 6px rgba(255, 255, 255, 0.2),
+        0 4px 12px rgba(139, 69, 19, 0.15);
+}
+
+.speech-rate-control, .pause-control, .pronunciation-control, .intonation-control {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 15px;
+    background: rgba(139, 69, 19, 0.1);
     border-radius: 12px;
-    border: 2px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.speech-rate-control:hover, .pause-control:hover, .pronunciation-control:hover, .intonation-control:hover {
+    background: rgba(139, 69, 19, 0.15);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(139, 69, 19, 0.2);
+}
+
+.timer-control {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    padding: 20px;
+    background: rgba(139, 69, 19, 0.15);
+    border-radius: 15px;
+    border: 2px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 
+        inset 0 2px 4px rgba(255, 255, 255, 0.1),
+        0 3px 8px rgba(139, 69, 19, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.timer-control::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 20% 20%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(139, 69, 19, 0.05) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.timer-control .timer {
+    font-size: 2.8rem;
+    font-weight: bold;
+    color: #ffd700;
+    padding: 18px 30px;
+    background: 
+        linear-gradient(135deg, rgba(0, 0, 0, 0.3) 0%, rgba(139, 69, 19, 0.2) 100%);
+    border-radius: 12px;
+    border: 3px solid rgba(255, 215, 0, 0.4);
+    font-family: 'Noto Serif CJK JP', serif;
+    letter-spacing: 0.15em;
+    text-shadow: 
+        2px 2px 4px rgba(0, 0, 0, 0.7),
+        0 0 8px rgba(255, 215, 0, 0.3);
+    min-width: 140px;
+    text-align: center;
+    box-shadow: 
+        inset 0 2px 4px rgba(255, 215, 0, 0.1),
+        0 4px 8px rgba(0, 0, 0, 0.3);
     position: relative;
     z-index: 1;
 }
 
-.speech-rate-control {
+.timer-buttons {
     display: flex;
-    flex-direction: column;
-    align-items: center;
     gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
 }
 
-.speech-rate-control label {
-    font-size: 1.1rem;
+.speech-rate-control label, .pause-control label, .pronunciation-control label, .intonation-control label {
+    font-size: 1rem;
     font-weight: bold;
     color: #faf8f0;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+    text-align: center;
+    margin-bottom: 5px;
+    letter-spacing: 0.02em;
 }
 
-.speech-rate-control input[type="range"] {
-    width: 300px;
-    height: 8px;
-    background: rgba(255, 255, 255, 0.3);
-    border-radius: 10px;
+/* トグルスイッチのスタイル */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 30px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-radius: 30px;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 2px;
+    bottom: 2px;
+    background: linear-gradient(135deg, #daa520, #ffd700);
+    border: 1px solid #8b4513;
+    border-radius: 50%;
+    transition: .4s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+input:checked + .slider {
+    background-color: rgba(139, 69, 19, 0.7);
+    border-color: #ffd700;
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+    background: linear-gradient(135deg, #ffd700, #ffed4e);
+}
+
+.speech-rate-control input[type="range"], .pause-control input[type="range"] {
+    width: 180px;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 8px;
     outline: none;
     -webkit-appearance: none;
     appearance: none;
+    border: 1px solid rgba(139, 69, 19, 0.3);
 }
 
-.speech-rate-control input[type="range"]::-webkit-slider-thumb {
+.speech-rate-control input[type="range"]::-webkit-slider-thumb, .pause-control input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
     width: 20px;
@@ -177,7 +312,7 @@ header h1 {
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
-.speech-rate-control input[type="range"]::-moz-range-thumb {
+.speech-rate-control input[type="range"]::-moz-range-thumb, .pause-control input[type="range"]::-moz-range-thumb {
     width: 20px;
     height: 20px;
     background: linear-gradient(135deg, #daa520, #ffd700);
@@ -187,7 +322,7 @@ header h1 {
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
-#speechRateValue {
+#speechRateValue, #pauseDurationValue {
     font-size: 1.2rem;
     font-weight: bold;
     color: #ffd700;
@@ -198,13 +333,14 @@ header h1 {
     border: 1px solid rgba(255, 215, 0, 0.3);
 }
 
-.rate-labels {
+.rate-labels, .pause-labels {
     display: flex;
     justify-content: space-between;
-    width: 300px;
-    font-size: 0.9rem;
-    color: rgba(250, 248, 240, 0.8);
+    width: 180px;
+    font-size: 0.8rem;
+    color: rgba(250, 248, 240, 0.7);
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    margin-top: 5px;
 }
 
 /* 和風ボタンスタイル */
@@ -290,11 +426,17 @@ header h1 {
     transform: none;
 }
 
+.btn-sm {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    border-radius: 6px;
+}
+
 /* メインコンテンツ */
 main {
     padding: 30px;
     display: grid;
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: 1fr;
     gap: 30px;
 }
 
@@ -425,40 +567,6 @@ main {
     font-size: 1.2rem;
 }
 
-/* タイマーセクション - 和風 */
-.timer-section {
-    background: 
-        linear-gradient(145deg, #fefdf8 0%, #f8f6f0 100%);
-    border-radius: 12px;
-    padding: 30px;
-    box-shadow: 
-        0 15px 35px rgba(139, 69, 19, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.9);
-    border: 3px solid #8b4513;
-    text-align: center;
-    height: fit-content;
-    position: relative;
-}
-
-.timer {
-    font-size: 3.5rem;
-    font-weight: bold;
-    color: #2c1810;
-    margin-bottom: 25px;
-    padding: 25px;
-    background: 
-        linear-gradient(135deg, rgba(218, 165, 32, 0.1) 0%, rgba(184, 134, 89, 0.1) 100%);
-    border-radius: 12px;
-    border: 3px solid rgba(139, 69, 19, 0.3);
-    font-family: 'Noto Serif CJK JP', serif;
-    letter-spacing: 0.1em;
-}
-
-.timer-controls {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
 
 /* 歌一覧 - 和風 */
 .poem-list {
@@ -487,8 +595,34 @@ main {
     border: 2px solid rgba(139, 69, 19, 0.3);
 }
 
-.search-box {
+.list-controls {
     margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.search-box {
+    flex: 1;
+}
+
+.sort-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.sort-btn {
+    min-width: 90px;
+    transition: all 0.3s ease;
+}
+
+.sort-btn.active {
+    background: linear-gradient(135deg, #8b4513, #a0522d) !important;
+    color: #faf8f0 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 12px rgba(139, 69, 19, 0.4) !important;
 }
 
 .search-box input {
@@ -560,16 +694,33 @@ main {
     margin-left: 20px;
 }
 
+.poem-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
 .poem-item-author {
     font-weight: bold;
     color: #2c1810;
-    margin-bottom: 5px;
     font-size: 1.1rem;
+}
+
+.poem-item-season {
+    font-size: 0.8rem;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-weight: bold;
+    min-width: 32px;
+    text-align: center;
+    border: 1px solid rgba(0,0,0,0.1);
 }
 
 .poem-item-text {
     color: #5d4e37;
     font-size: 0.95rem;
+    margin-top: 5px;
 }
 
 /* レスポンシブデザイン - スマホ最適化 */
@@ -603,17 +754,19 @@ main {
         min-width: 80px;
     }
     
-    .speech-controls {
+    .header-controls {
         margin-top: 15px;
         padding: 15px;
+        grid-template-columns: 1fr;
+        gap: 15px;
     }
     
-    .speech-rate-control input[type="range"] {
-        width: 250px;
+    .speech-rate-control input[type="range"], .pause-control input[type="range"] {
+        width: 200px;
     }
     
-    .rate-labels {
-        width: 250px;
+    .rate-labels, .pause-labels {
+        width: 200px;
     }
     
     main {
@@ -631,17 +784,28 @@ main {
         padding: 15px;
     }
     
-    .timer {
-        font-size: 2.5rem;
-        padding: 15px;
-    }
-    
-    .timer-controls {
-        flex-direction: column;
+    .timer-control .timer {
+        font-size: 2rem;
+        padding: 10px 15px;
+        min-width: 100px;
     }
     
     .poem-list {
         padding: 20px;
+    }
+    
+    .list-controls {
+        gap: 10px;
+    }
+    
+    .sort-buttons {
+        gap: 5px;
+    }
+    
+    .sort-btn {
+        min-width: 70px;
+        font-size: 0.8rem;
+        padding: 6px 12px;
     }
 }
 
