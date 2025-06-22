@@ -1,0 +1,35 @@
+{
+  "name": "ogura-hyakunin-isshu",
+  "version": "1.0.0",
+  "description": "小倉百人一首競技システム - デスクトップアプリ版",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder",
+    "dist": "npm run build"
+  },
+  "devDependencies": {
+    "electron": "^latest",
+    "electron-builder": "^latest"
+  },
+  "build": {
+    "appId": "com.yamakoziki.ogura-hyaku",
+    "productName": "小倉百人一首競技システム",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "**/*",
+      "!node_modules/**/*"
+    ],
+    "mac": {
+      "category": "public.app-category.education"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
+  }
+}
