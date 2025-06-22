@@ -90,6 +90,7 @@ class KarutaSystem {
             sortByNumber: document.getElementById('sortByNumber'),
             sortByAuthor: document.getElementById('sortByAuthor'),
             sortByKami: document.getElementById('sortByKami'),
+            sortByShimo: document.getElementById('sortByShimo'),
             sortBySeason: document.getElementById('sortBySeason')
         };
     }
@@ -135,6 +136,7 @@ class KarutaSystem {
         this.elements.sortByNumber.addEventListener('click', () => this.sortPoems('number'));
         this.elements.sortByAuthor.addEventListener('click', () => this.sortPoems('author'));
         this.elements.sortByKami.addEventListener('click', () => this.sortPoems('kami'));
+        this.elements.sortByShimo.addEventListener('click', () => this.sortPoems('shimo'));
         this.elements.sortBySeason.addEventListener('click', () => this.sortPoems('season'));
     }
 
@@ -447,6 +449,14 @@ class KarutaSystem {
             case 'kami':
                 this.sortedPoems = [...HYAKUNIN_ISSHU].sort((a, b) => {
                     return a.kamiNoKu.localeCompare(b.kamiNoKu, 'ja', { 
+                        numeric: true, 
+                        sensitivity: 'base' 
+                    });
+                });
+                break;
+            case 'shimo':
+                this.sortedPoems = [...HYAKUNIN_ISSHU].sort((a, b) => {
+                    return a.shimoNoKu.localeCompare(b.shimoNoKu, 'ja', { 
                         numeric: true, 
                         sensitivity: 'base' 
                     });

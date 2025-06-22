@@ -24,69 +24,6 @@
                 <button id="showAnswerBtn" class="btn btn-info">答えを表示</button>
             </div>
             
-            <div class="header-controls">
-                <div class="speech-rate-control">
-                    <label for="speechRate">読み上げ速度:</label>
-                    <input type="range" id="speechRate" min="0.3" max="2.0" step="0.1" value="0.8">
-                    <span id="speechRateValue">0.8</span>
-                    <div class="rate-labels">
-                        <span>遅い</span>
-                        <span>普通</span>
-                        <span>速い</span>
-                    </div>
-                </div>
-                
-                <div class="pause-control">
-                    <label for="pauseDuration">句間の間隔:</label>
-                    <input type="range" id="pauseDuration" min="0" max="2.0" step="0.1" value="0.5">
-                    <span id="pauseDurationValue">0.5秒</span>
-                    <div class="pause-labels">
-                        <span>なし</span>
-                        <span>普通</span>
-                        <span>長い</span>
-                    </div>
-                </div>
-                
-                <div class="pronunciation-control">
-                    <label for="pronunciationControl">は/わ 発音制御:</label>
-                    <label class="switch">
-                        <input type="checkbox" id="pronunciationControl" checked>
-                        <span class="slider"></span>
-                    </label>
-                </div>
-                
-                <div class="intonation-control">
-                    <label for="intonationControl">詠歌調の抑揚:</label>
-                    <label class="switch">
-                        <input type="checkbox" id="intonationControl" checked>
-                        <span class="slider"></span>
-                    </label>
-                </div>
-                
-                <div class="timer-control">
-                    <div class="timer" id="timer">00:00</div>
-                    <div class="timer-buttons">
-                        <button id="startTimerBtn" class="btn btn-success btn-sm">開始</button>
-                        <button id="pauseTimerBtn" class="btn btn-warning btn-sm">停止</button>
-                        <button id="resetTimerBtn" class="btn btn-secondary btn-sm">リセット</button>
-                    </div>
-                </div>
-                
-                <div class="extra-controls">
-                    <div class="dark-mode-control">
-                        <label for="darkModeToggle">ダークモード:</label>
-                        <label class="switch">
-                            <input type="checkbox" id="darkModeToggle">
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                    
-                    <div class="history-control">
-                        <button id="showHistoryBtn" class="btn btn-info btn-sm">練習履歴</button>
-                        <button id="clearHistoryBtn" class="btn btn-secondary btn-sm">履歴クリア</button>
-                    </div>
-                </div>
-            </div>
         </header>
 
         <main>
@@ -126,11 +63,68 @@
                         <button id="sortByNumber" class="btn btn-secondary btn-sm sort-btn active">番号順</button>
                         <button id="sortByAuthor" class="btn btn-secondary btn-sm sort-btn">歌人名順</button>
                         <button id="sortByKami" class="btn btn-secondary btn-sm sort-btn">上の句順</button>
+                        <button id="sortByShimo" class="btn btn-secondary btn-sm sort-btn">下の句順</button>
                         <button id="sortBySeason" class="btn btn-secondary btn-sm sort-btn">季節順</button>
                     </div>
                 </div>
                 <div id="poemList" class="list-container">
                     <!-- 歌一覧がここに表示されます -->
+                </div>
+            </div>
+            
+            <div class="settings-controls">
+                <h3>設定</h3>
+                <div class="settings-grid">
+                    <div class="speech-rate-control">
+                        <label for="speechRate">読み上げ速度:</label>
+                        <input type="range" id="speechRate" min="0.3" max="2.0" step="0.1" value="0.8">
+                        <span id="speechRateValue">0.8</span>
+                        <div class="rate-labels">
+                            <span>遅い</span>
+                            <span>普通</span>
+                            <span>速い</span>
+                        </div>
+                    </div>
+                    
+                    <div class="pause-control">
+                        <label for="pauseDuration">句間の間隔:</label>
+                        <input type="range" id="pauseDuration" min="0" max="2.0" step="0.1" value="0.5">
+                        <span id="pauseDurationValue">0.5秒</span>
+                        <div class="pause-labels">
+                            <span>なし</span>
+                            <span>普通</span>
+                            <span>長い</span>
+                        </div>
+                    </div>
+                    
+                    <div class="pronunciation-control">
+                        <label for="pronunciationControl">は/わ 発音制御:</label>
+                        <label class="switch">
+                            <input type="checkbox" id="pronunciationControl" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="intonation-control">
+                        <label for="intonationControl">詠歌調の抑揚:</label>
+                        <label class="switch">
+                            <input type="checkbox" id="intonationControl" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="dark-mode-control">
+                        <label for="darkModeToggle">ダークモード:</label>
+                        <label class="switch">
+                            <input type="checkbox" id="darkModeToggle">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="history-control">
+                        <button id="showHistoryBtn" class="btn btn-info btn-sm">練習履歴</button>
+                        <button id="clearHistoryBtn" class="btn btn-secondary btn-sm">履歴クリア</button>
+                    </div>
                 </div>
             </div>
             
@@ -148,6 +142,17 @@
                 </div>
             </div>
         </main>
+        
+        <footer class="bottom-controls">
+            <div class="timer-control">
+                <div class="timer" id="timer">00:00</div>
+                <div class="timer-buttons">
+                    <button id="startTimerBtn" class="btn btn-success btn-sm">開始</button>
+                    <button id="pauseTimerBtn" class="btn btn-warning btn-sm">停止</button>
+                    <button id="resetTimerBtn" class="btn btn-secondary btn-sm">リセット</button>
+                </div>
+            </div>
+        </footer>
     </div>
 
     <script src="karuta-data.js"></script>

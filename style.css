@@ -53,6 +53,7 @@ body::before {
     overflow: hidden;
     border: 3px solid #8b4513;
     position: relative;
+    padding-bottom: 120px; /* フッター用の余白 */
 }
 
 .container::before {
@@ -167,20 +168,28 @@ header h1 {
     box-shadow: 0 4px 8px rgba(139, 69, 19, 0.2);
 }
 
+.bottom-controls {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: 
+        linear-gradient(135deg, #8b4513 0%, #a0522d 50%, #cd853f 100%);
+    border-top: 3px solid #654321;
+    padding: 15px 20px;
+    box-shadow: 0 -5px 15px rgba(139, 69, 19, 0.3);
+    z-index: 1000;
+}
+
 .timer-control {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    gap: 15px;
-    padding: 20px;
-    background: rgba(139, 69, 19, 0.15);
-    border-radius: 15px;
-    border: 2px solid rgba(255, 255, 255, 0.25);
-    box-shadow: 
-        inset 0 2px 4px rgba(255, 255, 255, 0.1),
-        0 3px 8px rgba(139, 69, 19, 0.2);
+    justify-content: center;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
     position: relative;
-    overflow: hidden;
 }
 
 .timer-control::before {
@@ -197,24 +206,24 @@ header h1 {
 }
 
 .timer-control .timer {
-    font-size: 2.8rem;
+    font-size: 2rem;
     font-weight: bold;
     color: #ffd700;
-    padding: 18px 30px;
+    padding: 10px 20px;
     background: 
         linear-gradient(135deg, rgba(0, 0, 0, 0.3) 0%, rgba(139, 69, 19, 0.2) 100%);
-    border-radius: 12px;
-    border: 3px solid rgba(255, 215, 0, 0.4);
+    border-radius: 8px;
+    border: 2px solid rgba(255, 215, 0, 0.4);
     font-family: 'Noto Serif CJK JP', serif;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.1em;
     text-shadow: 
-        2px 2px 4px rgba(0, 0, 0, 0.7),
-        0 0 8px rgba(255, 215, 0, 0.3);
-    min-width: 140px;
+        1px 1px 2px rgba(0, 0, 0, 0.7),
+        0 0 4px rgba(255, 215, 0, 0.3);
+    min-width: 100px;
     text-align: center;
     box-shadow: 
-        inset 0 2px 4px rgba(255, 215, 0, 0.1),
-        0 4px 8px rgba(0, 0, 0, 0.3);
+        inset 0 1px 2px rgba(255, 215, 0, 0.1),
+        0 2px 4px rgba(0, 0, 0, 0.3);
     position: relative;
     z-index: 1;
 }
@@ -732,6 +741,7 @@ main {
     .container {
         margin: 5px;
         border-radius: 15px;
+        padding-bottom: 100px; /* スマホ用フッター用余白を調整 */
     }
     
     header {
@@ -757,21 +767,6 @@ main {
         max-width: 140px;
     }
     
-    .header-controls {
-        margin-top: 15px;
-        padding: 15px;
-        grid-template-columns: 1fr;
-        gap: 15px;
-    }
-    
-    .speech-rate-control input[type="range"], .pause-control input[type="range"] {
-        width: 200px;
-    }
-    
-    .rate-labels, .pause-labels {
-        width: 200px;
-    }
-    
     main {
         padding: 20px;
         grid-template-columns: 1fr;
@@ -787,10 +782,28 @@ main {
         padding: 15px;
     }
     
-    .timer-control .timer {
-        font-size: 2rem;
+    .bottom-controls {
         padding: 10px 15px;
-        min-width: 100px;
+    }
+    
+    .timer-control {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .timer-control .timer {
+        font-size: 1.6rem;
+        padding: 8px 15px;
+        min-width: 90px;
+    }
+    
+    .timer-buttons {
+        gap: 8px;
+    }
+    
+    .timer-buttons .btn {
+        padding: 6px 10px;
+        font-size: 0.8rem;
     }
     
     .poem-list {
@@ -810,11 +823,40 @@ main {
         font-size: 0.8rem;
         padding: 6px 12px;
     }
+    
+    .settings-controls {
+        margin: 20px 10px;
+        padding: 20px;
+    }
+    
+    .settings-controls h3 {
+        font-size: 1.3rem;
+        margin-bottom: 20px;
+    }
+    
+    .settings-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .speech-rate-control input[type="range"], .pause-control input[type="range"] {
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    .rate-labels, .pause-labels {
+        width: 100%;
+        max-width: 300px;
+    }
 }
 
 @media (max-width: 480px) {
     body {
         padding: 8px;
+    }
+    
+    .container {
+        padding-bottom: 90px; /* 小さなスマホ用フッター用余白 */
     }
     
     header {
@@ -846,9 +888,68 @@ main {
         padding: 12px;
     }
     
-    .timer {
-        font-size: 1.8rem;
+    .bottom-controls {
+        padding: 8px 10px;
     }
+    
+    .timer-control .timer {
+        font-size: 1.4rem;
+        padding: 6px 12px;
+        min-width: 80px;
+    }
+    
+    .timer-buttons {
+        gap: 6px;
+    }
+    
+    .timer-buttons .btn {
+        padding: 5px 8px;
+        font-size: 0.7rem;
+    }
+    
+    .settings-controls {
+        margin: 15px 5px;
+        padding: 15px;
+    }
+    
+    .settings-controls h3 {
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+    }
+    
+    .settings-grid {
+        gap: 15px;
+    }
+}
+
+/* 設定コントロール - 歌一覧の下に配置 */
+.settings-controls {
+    margin: 30px 20px;
+    padding: 30px;
+    background: 
+        linear-gradient(145deg, #faf8f0 0%, #f5f1e8 100%);
+    border-radius: 15px;
+    border: 3px solid rgba(139, 69, 19, 0.2);
+    box-shadow: 
+        0 10px 25px rgba(139, 69, 19, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.7);
+    position: relative;
+}
+
+.settings-controls h3 {
+    color: #8b4513;
+    font-size: 1.5rem;
+    margin-bottom: 25px;
+    text-align: center;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(139, 69, 19, 0.2);
+}
+
+.settings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+    align-items: start;
 }
 
 /* 新機能のスタイル */
