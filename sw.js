@@ -1,12 +1,14 @@
 // Service Worker for 小倉百人一首競技システム
 const CACHE_NAME = 'ogura-hyaku-v1';
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/style.css',
-  '/script.js',
-  '/karuta-data.js',
-  '/manifest.json'
+  './',
+  './index.html',
+  './style.css',
+  './script.js',
+  './karuta-data.js',
+  './manifest.json',
+  './icon-192.png',
+  './icon-512.png'
 ];
 
 self.addEventListener('install', function(event) {

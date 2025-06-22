@@ -163,7 +163,7 @@
         // Service Worker registration for PWA
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
-                navigator.serviceWorker.register('/sw.js')
+                navigator.serviceWorker.register('./sw.js')
                     .then(function(registration) {
                         console.log('SW registered: ', registration);
                     })
@@ -171,6 +171,60 @@
                         console.log('SW registration failed: ', registrationError);
                     });
             });
+        }
+
+        // PWA Install prompt
+        let deferredPrompt;
+        
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            
+            // Show install button for Chrome
+            const installBtn = document.createElement('button');
+            installBtn.textContent = 'アプリをインストール';
+            installBtn.className = 'btn btn-info btn-sm install-btn';
+            installBtn.style.position = 'fixed';
+            installBtn.style.top = '10px';
+            installBtn.style.right = '10px';
+            installBtn.style.zIndex = '1000';
+            
+            installBtn.addEventListener('click', () => {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('User accepted the install prompt');
+                    }
+                    deferredPrompt = null;
+                    installBtn.remove();
+                });
+            });
+            
+            document.body.appendChild(installBtn);
+        });
+        
+        // Handle iOS installation instructions
+        function isIOS() {
+            return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        }
+        
+        function isInStandaloneMode() {
+            return (window.navigator.standalone === true);
+        }
+        
+        if (isIOS() && !isInStandaloneMode()) {
+            // Show iOS install instructions
+            setTimeout(() => {
+                const iosInstallDiv = document.createElement('div');
+                iosInstallDiv.innerHTML = `
+                    <div style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #8b4513; color: white; padding: 15px; border-radius: 10px; text-align: center; z-index: 1000; max-width: 300px; font-size: 14px;">
+                        <p>このアプリをホーム画面に追加できます</p>
+                        <p>Safari の共有ボタン → 「ホーム画面に追加」をタップ</p>
+                        <button onclick="this.parentElement.parentElement.remove()" style="background: white; color: #8b4513; border: none; padding: 5px 10px; border-radius: 5px; margin-top: 10px;">閉じる</button>
+                    </div>
+                `;
+                document.body.appendChild(iosInstallDiv);
+            }, 3000);
         }
     </script>
 </body>
