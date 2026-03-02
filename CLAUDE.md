@@ -44,7 +44,8 @@ Single class managing all state and behavior. `karutaSystem` is a `let` global i
   - `readCompletePoem()` and `readShimoOnly()` — only disable their own button; the pause/resume button is NOT shown for these modes
   - `readShimoOnly()` reads `segments.slice(3)` — segments at indices 3–4 (the 下の句、七・七)
 - **Pause/resume**: stores `currentSegmentIndex` so resume continues from the interrupted segment; only functional when reading was started via `readPoem()`
-- **State**: `currentPoem`, `isReading`, `isPaused`, `isRepeating`, `isDarkMode`
+- **Random continuous playback**: `startRandomPlay()` shuffles all poem indices into `randomQueue`, then plays each poem sequentially via `playNextPoem()`. `poemInterval` (seconds, configurable) gaps between poems via `poemIntervalTimer`. Controls shown/hidden via `randomControls` element. State flags: `isRandomPlaying`, `isRandomPaused`, `isInPoemGap`.
+- **State**: `currentPoem`, `isReading`, `isPaused`, `isRepeating`, `isDarkMode`, `isRandomPlaying`, `isRandomPaused`
 - **`localStorage` keys**: `'karutaHistory'` (JSON array, max 100; de-duplicated by poem number — re-selecting a poem moves it to the top) and `'karutaDarkMode'` ('true'/'false' string)
 - **Sort**: `sortedPoems` array reordered by `currentSortOrder` ('number' | 'author' | 'kami' | 'shimo' | 'season'); season order: 春→夏→秋→冬→恋→雑
 

@@ -166,7 +166,8 @@ class KarutaSystem {
 
         this.elements.poemNumber.textContent = this.currentPoem.number;
         this.elements.poemAuthor.textContent = this.currentPoem.author;
-        this.elements.kamiNoKu.textContent = this.currentPoem.kamiNoKu;
+        const kamiParts = this.currentPoem.kamiNoKu.split(' ');
+        this.elements.kamiNoKu.innerHTML = `${kamiParts[0]}<br>${kamiParts[1]}<br><br>${kamiParts[2]}`;
         const shimoParts = this.currentPoem.shimoNoKu.split(' ');
         this.elements.shimoNoKu.innerHTML = shimoParts.join('<br>');
         this.elements.readingText.textContent = this.currentPoem.reading;
