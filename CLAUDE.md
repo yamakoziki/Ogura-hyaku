@@ -40,11 +40,11 @@ Single class managing all state and behavior. `karutaSystem` is a `let` global i
 - **`bindEvents()`** — wires all event listeners against `this.elements`
 - **Speech system** — splits `poem.reading` on whitespace into 5 segments (空白区切りの5句); calls `window.speechSynthesis` with per-segment pitch/rate/volume from `this.intonationPatterns[]`; `pronunciationControlEnabled` corrects は/わ particles before reading via `processPronunciation()`
 - **Three read modes** (important differences in button state):
-  - `readPoem()` — calls `readPoemWithPauses()` → `updateReadingButtons(true)`, which disables ALL read buttons and shows the pause/resume button
-  - `readCompletePoem()` and `readShimoOnly()` — only disable their own button; the pause/resume button is NOT shown for these modes
-  - `readShimoOnly()` reads `segments.slice(3)` — segments at indices 3–4 (the 下の句、七・七)
+  - `readPoem()` — calls `readPoemWithPauses()` → `updateReadingButtons(true)`, which disables ALL read buttons and shows the pause/resume button; supports pause/resume
+  - `readCompletePoem()` — reads the same full 5-segment `reading` as `readPoem()`, but only disables its own button and does NOT show the pause/resume button
+  - `readShimoOnly()` — reads `segments.slice(3)` (indices 3–4, the 下の句 七・七); only disables its own button; no pause/resume
 - **Pause/resume**: stores `currentSegmentIndex` so resume continues from the interrupted segment; only functional when reading was started via `readPoem()`
-- **Random continuous playback**: `startRandomPlay()` shuffles all poem indices into `randomQueue`, then plays each poem sequentially via `playNextPoem()`. `poemInterval` (seconds, configurable) gaps between poems via `poemIntervalTimer`. Controls shown/hidden via `randomControls` element. State flags: `isRandomPlaying`, `isRandomPaused`, `isInPoemGap`.
+- **Random continuous playback**: `startRandomPlay()` uses Fisher-Yates shuffle on all `HYAKUNIN_ISSHU` indices (ignores current sort/search state) into `randomQueue`, then plays each poem sequentially via `playCurrentInQueue()`. `poemInterval` (seconds, configurable) gaps between poems via `poemIntervalTimer`. Controls shown/hidden via `randomControls` element. State flags: `isRandomPlaying`, `isRandomPaused`, `isInPoemGap`.
 - **State**: `currentPoem`, `isReading`, `isPaused`, `isRepeating`, `isDarkMode`, `isRandomPlaying`, `isRandomPaused`
 - **`localStorage` keys**: `'karutaHistory'` (JSON array, max 100; de-duplicated by poem number — re-selecting a poem moves it to the top) and `'karutaDarkMode'` ('true'/'false' string)
 - **Sort**: `sortedPoems` array reordered by `currentSortOrder` ('number' | 'author' | 'kami' | 'shimo' | 'season'); season order: 春→夏→秋→冬→恋→雑
@@ -54,6 +54,8 @@ Single class managing all state and behavior. `karutaSystem` is a `let` global i
 `karutaSystem` is a module-level `let` global. The `showHistory()` method generates HTML with inline `onclick="karutaSystem.selectPoemFromHistory(...)"`. If renaming the global, update that method too.
 
 `selectPoem(index)` takes an index into `sortedPoems[]` (not a poem number), so the same index refers to different poems when the sort order changes.
+
+`selectPoemFromHistory(poemNumber)` looks up by `poem.number` directly in `HYAKUNIN_ISSHU` (not `sortedPoems`), so it is sort-order independent.
 
 ### Poem data structure (`karuta-data.js`)
 ```javascript
