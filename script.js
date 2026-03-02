@@ -14,6 +14,13 @@ class KarutaSystem {
         this.isPaused = false; // 一時停止状態
         this.isRepeating = false; // リピート状態
         this.isDarkMode = false; // ダークモード状態
+        this.isRandomPlaying = false; // ランダム連続再生状態
+        this.isRandomPaused = false; // ランダム再生一時停止状態
+        this.randomQueue = []; // シャッフルされた歌のインデックス配列
+        this.randomQueueIndex = 0; // 現在の再生位置
+        this.poemInterval = 3; // 歌と歌の間隔（秒）
+        this.poemIntervalTimer = null; // 歌間隔タイマー
+        this.isInPoemGap = false; // 歌と歌の間の待機中フラグ
         this.practiceHistory = JSON.parse(localStorage.getItem('karutaHistory') || '[]'); // 練習履歴
         
         // 季節データマッピング
@@ -86,13 +93,21 @@ class KarutaSystem {
             sortByAuthor: document.getElementById('sortByAuthor'),
             sortByKami: document.getElementById('sortByKami'),
             sortByShimo: document.getElementById('sortByShimo'),
-            sortBySeason: document.getElementById('sortBySeason')
+            sortBySeason: document.getElementById('sortBySeason'),
+            randomControls: document.getElementById('randomControls'),
+            randomPauseResumeBtn: document.getElementById('randomPauseResumeBtn'),
+            randomStopBtn: document.getElementById('randomStopBtn'),
+            randomProgress: document.getElementById('randomProgress'),
+            poemInterval: document.getElementById('poemInterval'),
+            poemIntervalValue: document.getElementById('poemIntervalValue')
         };
     }
 
     bindEvents() {
         // ボタンイベントの設定
-        this.elements.randomBtn.addEventListener('click', () => this.selectRandomPoem());
+        this.elements.randomBtn.addEventListener('click', () => this.startRandomPlay());
+        this.elements.randomPauseResumeBtn.addEventListener('click', () => this.toggleRandomPauseResume());
+        this.elements.randomStopBtn.addEventListener('click', () => this.stopRandomPlay());
         this.elements.readBtn.addEventListener('click', () => this.readPoem());
         this.elements.readCompleteBtn.addEventListener('click', () => this.readCompletePoem());
         this.elements.readShimoBtn.addEventListener('click', () => this.readShimoOnly());
@@ -115,6 +130,9 @@ class KarutaSystem {
         
         // 句間間隔イベント
         this.elements.pauseDuration.addEventListener('input', () => this.updatePauseDuration());
+
+        // 歌と歌の間隔イベント
+        this.elements.poemInterval.addEventListener('input', () => this.updatePoemInterval());
         
         // 発音制御イベント
         this.elements.pronunciationControl.addEventListener('change', () => this.updatePronunciationControl());
@@ -149,7 +167,8 @@ class KarutaSystem {
         this.elements.poemNumber.textContent = this.currentPoem.number;
         this.elements.poemAuthor.textContent = this.currentPoem.author;
         this.elements.kamiNoKu.textContent = this.currentPoem.kamiNoKu;
-        this.elements.shimoNoKu.textContent = this.currentPoem.shimoNoKu;
+        const shimoParts = this.currentPoem.shimoNoKu.split(' ');
+        this.elements.shimoNoKu.innerHTML = shimoParts.join('<br>');
         this.elements.readingText.textContent = this.currentPoem.reading;
         this.elements.meaningText.textContent = this.currentPoem.meaning;
 
@@ -211,7 +230,13 @@ class KarutaSystem {
             this.isPaused = false;
             this.currentSegmentIndex = 0; // リセット
             this.updateReadingButtons(false);
-            
+
+            // ランダム連続再生中は次の歌へ
+            if (this.isRandomPlaying && !this.isRandomPaused) {
+                this.scheduleNextPoem();
+                return;
+            }
+
             // リピートモードの場合は再度開始
             if (this.isRepeating && this.currentPoem) {
                 setTimeout(() => {
@@ -509,8 +534,8 @@ class KarutaSystem {
         const fullReading = this.currentPoem.reading;
         const segments = this.parseToSegments(fullReading);
         
-        // 一般的に5句構成なので、後半3句を下の句として扱う
-        const shimoSegments = segments.slice(2); // 3句目から最後まで
+        // 五七五七七の5句構成なので、後半2句（七・七）が下の句
+        const shimoSegments = segments.slice(3); // 4句目から最後まで（七・七）
         this.currentSegments = shimoSegments;
         this.currentSegmentIndex = 0;
         
@@ -558,6 +583,11 @@ class KarutaSystem {
     }
     
     updateReadingButtons(isReading) {
+        // ランダム再生中は既存の音声ボタンUIを変更しない
+        if (this.isRandomPlaying) {
+            this.elements.pauseResumeBtn.style.display = 'none';
+            return;
+        }
         if (isReading) {
             this.elements.readBtn.disabled = true;
             this.elements.readCompleteBtn.disabled = true;
@@ -655,6 +685,147 @@ class KarutaSystem {
             this.isDarkMode = true;
             this.elements.darkModeToggle.checked = true;
             document.body.className = 'dark-mode';
+        }
+    }
+
+    // ===== ランダム連続再生 =====
+
+    startRandomPlay() {
+        this.stopReading();
+
+        // Fisher-Yates シャッフルで100首の順番を決める
+        const indices = Array.from({ length: HYAKUNIN_ISSHU.length }, (_, i) => i);
+        for (let i = indices.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [indices[i], indices[j]] = [indices[j], indices[i]];
+        }
+        this.randomQueue = indices;
+        this.randomQueueIndex = 0;
+        this.isRandomPlaying = true;
+        this.isRandomPaused = false;
+        this.isInPoemGap = false;
+
+        this.updateRandomPlayUI(true);
+        this.playCurrentInQueue();
+    }
+
+    stopRandomPlay() {
+        this.isRandomPlaying = false;
+        this.isRandomPaused = false;
+        this.isInPoemGap = false;
+
+        if (this.poemIntervalTimer) {
+            clearTimeout(this.poemIntervalTimer);
+            this.poemIntervalTimer = null;
+        }
+        this.stopReading();
+        this.updateRandomPlayUI(false);
+    }
+
+    toggleRandomPauseResume() {
+        if (this.isRandomPaused) {
+            this.resumeRandomPlay();
+        } else {
+            this.pauseRandomPlay();
+        }
+    }
+
+    pauseRandomPlay() {
+        this.isRandomPaused = true;
+
+        if (this.isInPoemGap) {
+            // 歌間の待機中 → タイマーをキャンセル
+            if (this.poemIntervalTimer) {
+                clearTimeout(this.poemIntervalTimer);
+                this.poemIntervalTimer = null;
+            }
+        } else if (this.isReading) {
+            // 読み上げ中 → 音声をキャンセルしてセグメント位置を保存
+            if (this.synth.speaking) {
+                this.synth.cancel();
+            }
+            this.isPaused = true;
+            this.isReading = false;
+        }
+
+        this.elements.randomPauseResumeBtn.textContent = '再開';
+    }
+
+    resumeRandomPlay() {
+        this.isRandomPaused = false;
+
+        if (this.isInPoemGap) {
+            // 歌間待機から再開 → 次の歌へ進む
+            this.isInPoemGap = false;
+            this.scheduleNextPoem();
+        } else if (this.isPaused) {
+            // 読み上げ途中から再開
+            this.resumeReading();
+        }
+
+        this.elements.randomPauseResumeBtn.textContent = '一時停止';
+    }
+
+    playCurrentInQueue() {
+        if (!this.isRandomPlaying || this.isRandomPaused) return;
+
+        const poemIndex = this.randomQueue[this.randomQueueIndex];
+        this.currentPoem = HYAKUNIN_ISSHU[poemIndex];
+        this.displayPoem(true);
+        this.addToHistory(this.currentPoem);
+
+        this.elements.randomProgress.textContent =
+            `${this.randomQueueIndex + 1} / ${HYAKUNIN_ISSHU.length}`;
+
+        this.readPoemWithPauses();
+    }
+
+    scheduleNextPoem() {
+        if (!this.isRandomPlaying || this.isRandomPaused) return;
+
+        this.randomQueueIndex++;
+
+        if (this.randomQueueIndex >= this.randomQueue.length) {
+            this.stopRandomPlay();
+            return;
+        }
+
+        if (this.poemInterval > 0) {
+            this.isInPoemGap = true;
+            this.poemIntervalTimer = setTimeout(() => {
+                this.isInPoemGap = false;
+                this.poemIntervalTimer = null;
+                if (this.isRandomPlaying && !this.isRandomPaused) {
+                    this.playCurrentInQueue();
+                }
+            }, this.poemInterval * 1000);
+        } else {
+            this.playCurrentInQueue();
+        }
+    }
+
+    updatePoemInterval() {
+        this.poemInterval = parseInt(this.elements.poemInterval.value);
+        this.elements.poemIntervalValue.textContent = this.poemInterval + '秒';
+    }
+
+    updateRandomPlayUI(active) {
+        this.elements.randomBtn.style.display = active ? 'none' : 'inline-block';
+        this.elements.randomControls.style.display = active ? 'flex' : 'none';
+        this.elements.randomPauseResumeBtn.textContent = '一時停止';
+
+        // 通常の音声ボタンを無効化/有効化
+        this.elements.readBtn.disabled = active;
+        this.elements.readCompleteBtn.disabled = active;
+        this.elements.readShimoBtn.disabled = active;
+        this.elements.stopBtn.disabled = active;
+        this.elements.repeatBtn.disabled = active;
+        this.elements.pauseResumeBtn.style.display = 'none';
+
+        if (!active) {
+            this.elements.readBtn.textContent = '読み上げ';
+            this.elements.readCompleteBtn.textContent = '全部読む';
+            this.elements.readShimoBtn.textContent = '下の句';
         }
     }
 }

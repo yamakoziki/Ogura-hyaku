@@ -21,7 +21,12 @@
         <main>
             <!-- メインアクション -->
             <div class="main-actions">
-                <button id="randomBtn" class="btn btn-primary btn-large">ランダム選択</button>
+                <button id="randomBtn" class="btn btn-primary btn-large">ランダム再生</button>
+                <div id="randomControls" class="random-controls" style="display: none;">
+                    <button id="randomPauseResumeBtn" class="btn btn-pause">一時停止</button>
+                    <button id="randomStopBtn" class="btn btn-ghost btn-sm">停止</button>
+                    <span id="randomProgress" class="random-progress">1 / 100</span>
+                </div>
                 <button id="showAnswerBtn" class="btn btn-outline btn-large">答えを表示</button>
             </div>
 
@@ -77,6 +82,13 @@
                         <div class="slider-wrap">
                             <input type="range" id="pauseDuration" min="0" max="2.0" step="0.1" value="0.5">
                             <span id="pauseDurationValue">0.5秒</span>
+                        </div>
+                    </div>
+                    <div class="setting-row">
+                        <label for="poemInterval">歌と歌の間隔</label>
+                        <div class="slider-wrap">
+                            <input type="range" id="poemInterval" min="0" max="10" step="1" value="3">
+                            <span id="poemIntervalValue">3秒</span>
                         </div>
                     </div>
                     <div class="setting-row">

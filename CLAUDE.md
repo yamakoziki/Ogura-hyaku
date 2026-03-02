@@ -34,19 +34,25 @@ No automated tests — verify manually in browser. Web Speech API requires Chrom
 
 ### KarutaSystem class (`script.js`)
 
-Single class managing all state and behavior:
+Single class managing all state and behavior. `karutaSystem` is a `let` global initialized inside `DOMContentLoaded`.
+
 - **`initializeElements()`** — caches all DOM elements by ID into `this.elements`
 - **`bindEvents()`** — wires all event listeners against `this.elements`
-- **Speech system** — splits `poem.reading` on whitespace into 5 segments (空白区切りの5句); calls `window.speechSynthesis` with per-segment pitch/rate/volume from `this.intonationPatterns[]`; `pronunciationControlEnabled` corrects は/わ particles before reading
-- **Three read modes**: `readPoem()` reads the full poem; `readCompletePoem()` also reads the full poem (different button state handling); `readShimoOnly()` reads `segments.slice(2)` — segments at indices 2–4 (the 下の句)
-- **Pause/resume**: stores `currentSegmentIndex` so resume continues from the interrupted segment
+- **Speech system** — splits `poem.reading` on whitespace into 5 segments (空白区切りの5句); calls `window.speechSynthesis` with per-segment pitch/rate/volume from `this.intonationPatterns[]`; `pronunciationControlEnabled` corrects は/わ particles before reading via `processPronunciation()`
+- **Three read modes** (important differences in button state):
+  - `readPoem()` — calls `readPoemWithPauses()` → `updateReadingButtons(true)`, which disables ALL read buttons and shows the pause/resume button
+  - `readCompletePoem()` and `readShimoOnly()` — only disable their own button; the pause/resume button is NOT shown for these modes
+  - `readShimoOnly()` reads `segments.slice(3)` — segments at indices 3–4 (the 下の句、七・七)
+- **Pause/resume**: stores `currentSegmentIndex` so resume continues from the interrupted segment; only functional when reading was started via `readPoem()`
 - **State**: `currentPoem`, `isReading`, `isPaused`, `isRepeating`, `isDarkMode`
-- **`localStorage` keys**: `'karutaHistory'` (JSON array, max 100) and `'karutaDarkMode'` ('true'/'false' string)
+- **`localStorage` keys**: `'karutaHistory'` (JSON array, max 100; de-duplicated by poem number — re-selecting a poem moves it to the top) and `'karutaDarkMode'` ('true'/'false' string)
 - **Sort**: `sortedPoems` array reordered by `currentSortOrder` ('number' | 'author' | 'kami' | 'shimo' | 'season'); season order: 春→夏→秋→冬→恋→雑
 
 ### Global variable and inline handlers
 
-`karutaSystem` is a module-level global. The `showHistory()` method generates HTML with inline `onclick="karutaSystem.selectPoemFromHistory(...)"`. If renaming the global, update that method too.
+`karutaSystem` is a module-level `let` global. The `showHistory()` method generates HTML with inline `onclick="karutaSystem.selectPoemFromHistory(...)"`. If renaming the global, update that method too.
+
+`selectPoem(index)` takes an index into `sortedPoems[]` (not a poem number), so the same index refers to different poems when the sort order changes.
 
 ### Poem data structure (`karuta-data.js`)
 ```javascript
@@ -81,10 +87,10 @@ The GitHub Actions workflow (`.github/workflows/build.yml`) triggers on `v*` tag
 
 ## PWA / Service Worker
 
-`sw.js` caches all static assets under `CACHE_NAME = 'ogura-hyaku-v1'`. When modifying assets, increment this version string to force cache invalidation on next visit.
+`sw.js` caches all static assets under a versioned `CACHE_NAME` (currently `ogura-hyaku-v3`). When modifying assets, increment this version string to force cache invalidation on next visit.
 
 ## Design System
 
 - Font: Noto Serif CJK JP (Japanese serif)
-- Theme: brown/gold (`#8b4513`) with seasonal accent colors per `season` field
-- Dark mode: toggled via `isDarkMode` state, applies `.dark-mode` to `document.body`, persisted in `localStorage`
+- Theme: brown/gold (`#8b4513`) with seasonal accent colors per `season` field (defined in `applySeasonColor()`)
+- Dark mode: toggled via `isDarkMode` state, applies `.dark-mode` to `document.body`, persisted in `localStorage`; initialized from `localStorage` in `initializeDarkMode()` called from constructor
