@@ -53,6 +53,7 @@ class KarutaSystem {
         this.bindEvents();
         this.displayPoemList();
         this.initializeDarkMode();
+        this.createPetals();
     }
 
     initializeElements() {
@@ -686,6 +687,26 @@ class KarutaSystem {
             this.isDarkMode = true;
             this.elements.darkModeToggle.checked = true;
             document.body.className = 'dark-mode';
+        }
+    }
+
+    createPetals() {
+        const container = document.getElementById('petals');
+        if (!container) return;
+        for (let i = 0; i < 20; i++) {
+            const petal = document.createElement('div');
+            petal.className = 'petal';
+            const size = 8 + Math.random() * 8;
+            petal.style.cssText = [
+                `width: ${size}px`,
+                `height: ${(size * 1.2).toFixed(1)}px`,
+                `left: ${(Math.random() * 100).toFixed(1)}%`,
+                `animation-duration: ${(10 + Math.random() * 15).toFixed(1)}s`,
+                `animation-delay: ${(-Math.random() * 25).toFixed(1)}s`,
+                `--drift: ${((Math.random() - 0.5) * 120).toFixed(0)}px`,
+                `--spin: ${(200 + Math.random() * 360).toFixed(0)}deg`
+            ].join(';');
+            container.appendChild(petal);
         }
     }
 
