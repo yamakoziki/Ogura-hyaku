@@ -1,5 +1,5 @@
 // Service Worker for 小倉百人一首競技システム
-const CACHE_NAME = 'ogura-hyaku-v1';
+const CACHE_NAME = 'ogura-hyaku-v2';
 const urlsToCache = [
   './',
   './index.html',
