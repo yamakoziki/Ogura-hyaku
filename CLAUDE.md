@@ -25,7 +25,7 @@ No automated tests — verify manually in browser. Web Speech API requires Chrom
 ### Files
 - `index.html` — single-page app layout; all UI structure defined here with IDs matching `initializeElements()`
 - `style.css` — all styling; dark mode via `.dark-mode` class on `<body>`
-- `script.js` — `KarutaSystem` class, instantiated once at page load
+- `script.js` — `KarutaSystem` class, instantiated once at page load as global `karutaSystem`
 - `karuta-data.js` — `HYAKUNIN_ISSHU` array (100 poems), imported as global before `script.js`
 - `sw.js` — service worker for PWA offline caching; update `CACHE_NAME` constant when assets change
 - `manifest.json` — PWA manifest
@@ -37,9 +37,16 @@ No automated tests — verify manually in browser. Web Speech API requires Chrom
 Single class managing all state and behavior:
 - **`initializeElements()`** — caches all DOM elements by ID into `this.elements`
 - **`bindEvents()`** — wires all event listeners against `this.elements`
-- **Speech system** — segments each poem into 5 phrases (5-7-5-7-7); calls `window.speechSynthesis` with per-segment pitch/rate/volume from `this.intonationPatterns[]`; `pronunciationControlEnabled` corrects は/わ particles before reading
-- **State**: `currentPoem`, `isReading`, `isPaused`, `isRepeating`, `isDarkMode`, `practiceHistory` (persisted to `localStorage` as `'karutaHistory'`)
+- **Speech system** — splits `poem.reading` on whitespace into 5 segments (空白区切りの5句); calls `window.speechSynthesis` with per-segment pitch/rate/volume from `this.intonationPatterns[]`; `pronunciationControlEnabled` corrects は/わ particles before reading
+- **Three read modes**: `readPoem()` reads the full poem; `readCompletePoem()` also reads the full poem (different button state handling); `readShimoOnly()` reads `segments.slice(2)` — segments at indices 2–4 (the 下の句)
+- **Pause/resume**: stores `currentSegmentIndex` so resume continues from the interrupted segment
+- **State**: `currentPoem`, `isReading`, `isPaused`, `isRepeating`, `isDarkMode`
+- **`localStorage` keys**: `'karutaHistory'` (JSON array, max 100) and `'karutaDarkMode'` ('true'/'false' string)
 - **Sort**: `sortedPoems` array reordered by `currentSortOrder` ('number' | 'author' | 'kami' | 'shimo' | 'season'); season order: 春→夏→秋→冬→恋→雑
+
+### Global variable and inline handlers
+
+`karutaSystem` is a module-level global. The `showHistory()` method generates HTML with inline `onclick="karutaSystem.selectPoemFromHistory(...)"`. If renaming the global, update that method too.
 
 ### Poem data structure (`karuta-data.js`)
 ```javascript
@@ -48,11 +55,13 @@ Single class managing all state and behavior:
     author: "天智天皇",
     kamiNoKu: "秋の田の かりほの庵の 苫をあらみ",   // upper verse (displayed first)
     shimoNoKu: "わが衣手は 露にぬれつつ",            // lower verse (hidden until revealed)
-    reading: "あきのたの...",  // full kana reading
+    reading: "あきのたの かりほのいほの とまをあらみ わがころもでは つゆにぬれつつ",  // 5 whitespace-delimited phrases
     meaning: "...",            // modern Japanese meaning
     season: "秋"               // 春|夏|秋|冬|恋|雑
 }
 ```
+
+> **Note**: `karuta-data.js` has a `season` field per poem, but `script.js` also maintains a separate `this.seasonData` object (poem number → season) that the display code actually uses. When adding poems, update **both**.
 
 ## Electron Desktop App
 
