@@ -2,7 +2,6 @@ class KarutaSystem {
     constructor() {
         this.currentPoem = null;
         this.isReading = false;
-        this.timer = { seconds: 0, minutes: 0, interval: null, isRunning: false };
         this.synth = window.speechSynthesis;
         this.utterance = null;
         this.currentSortOrder = 'number'; // 'number', 'author', 'kami', 'season'
@@ -75,10 +74,6 @@ class KarutaSystem {
             readingText: document.getElementById('readingText'),
             poemMeaning: document.getElementById('poemMeaning'),
             meaningText: document.getElementById('meaningText'),
-            timer: document.getElementById('timer'),
-            startTimerBtn: document.getElementById('startTimerBtn'),
-            pauseTimerBtn: document.getElementById('pauseTimerBtn'),
-            resetTimerBtn: document.getElementById('resetTimerBtn'),
             searchInput: document.getElementById('searchInput'),
             poemList: document.getElementById('poemList'),
             speechRate: document.getElementById('speechRate'),
@@ -111,11 +106,6 @@ class KarutaSystem {
         this.elements.showHistoryBtn.addEventListener('click', () => this.showHistory());
         this.elements.clearHistoryBtn.addEventListener('click', () => this.clearHistory());
         this.elements.closeHistoryModal.addEventListener('click', () => this.closeHistory());
-        
-        // タイマーイベント
-        this.elements.startTimerBtn.addEventListener('click', () => this.startTimer());
-        this.elements.pauseTimerBtn.addEventListener('click', () => this.pauseTimer());
-        this.elements.resetTimerBtn.addEventListener('click', () => this.resetTimer());
         
         // 検索イベント
         this.elements.searchInput.addEventListener('input', () => this.filterPoems());
@@ -316,45 +306,6 @@ class KarutaSystem {
         this.readSegments(this.currentSegments, this.currentSegmentIndex);
     }
 
-    // タイマー機能
-    startTimer() {
-        if (!this.timer.isRunning) {
-            this.timer.interval = setInterval(() => {
-                this.timer.seconds++;
-                if (this.timer.seconds >= 60) {
-                    this.timer.minutes++;
-                    this.timer.seconds = 0;
-                }
-                this.updateTimerDisplay();
-            }, 1000);
-            this.timer.isRunning = true;
-            this.elements.startTimerBtn.textContent = '実行中';
-            this.elements.startTimerBtn.disabled = true;
-        }
-    }
-
-    pauseTimer() {
-        if (this.timer.isRunning) {
-            clearInterval(this.timer.interval);
-            this.timer.isRunning = false;
-            this.elements.startTimerBtn.textContent = 'タイマー開始';
-            this.elements.startTimerBtn.disabled = false;
-        }
-    }
-
-    resetTimer() {
-        this.pauseTimer();
-        this.timer.seconds = 0;
-        this.timer.minutes = 0;
-        this.updateTimerDisplay();
-    }
-
-    updateTimerDisplay() {
-        const mins = this.timer.minutes.toString().padStart(2, '0');
-        const secs = this.timer.seconds.toString().padStart(2, '0');
-        this.elements.timer.textContent = `${mins}:${secs}`;
-    }
-
     displayPoemList() {
         this.elements.poemList.innerHTML = '';
         
@@ -488,12 +439,12 @@ class KarutaSystem {
 
     applySeasonColor(element, season) {
         const seasonColors = {
-            "春": { background: "linear-gradient(135deg, #ffc0cb, #ffb6c1)", color: "#8b008b" },
-            "夏": { background: "linear-gradient(135deg, #90ee90, #98fb98)", color: "#006400" },
-            "秋": { background: "linear-gradient(135deg, #ffa500, #ffd700)", color: "#8b4513" },
-            "冬": { background: "linear-gradient(135deg, #add8e6, #87ceeb)", color: "#191970" },
-            "恋": { background: "linear-gradient(135deg, #ff69b4, #ff1493)", color: "#ffffff" },
-            "雑": { background: "linear-gradient(135deg, #d3d3d3, #c0c0c0)", color: "#2f4f4f" }
+            "春": { background: "linear-gradient(135deg, #ffe4ee, #ffd0e4)", color: "#c8507a" },
+            "夏": { background: "linear-gradient(135deg, #e0f8e8, #c8f0d8)", color: "#3a8a3a" },
+            "秋": { background: "linear-gradient(135deg, #fff0d8, #ffe0b0)", color: "#d4720a" },
+            "冬": { background: "linear-gradient(135deg, #e4eeff, #c8d8ff)", color: "#4060c0" },
+            "恋": { background: "linear-gradient(135deg, #ffd8ec, #ffb8d8)", color: "#c83068" },
+            "雑": { background: "linear-gradient(135deg, #f0f0f0, #e0e0e0)", color: "#606060" }
         };
         
         const colors = seasonColors[season];
@@ -627,7 +578,7 @@ class KarutaSystem {
     toggleRepeat() {
         this.isRepeating = !this.isRepeating;
         this.elements.repeatBtn.textContent = this.isRepeating ? 'リピート停止' : 'リピート';
-        this.elements.repeatBtn.className = this.isRepeating ? 'btn btn-warning' : 'btn btn-success';
+        this.elements.repeatBtn.className = this.isRepeating ? 'btn btn-pause btn-ghost' : 'btn btn-ghost';
     }
     
     toggleDarkMode() {

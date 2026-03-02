@@ -1,258 +1,424 @@
-/* 小倉百人一首競技システム - 伝統的和風デザイン */
+/* 小倉百人一首 — かわいい和モダンデザイン (Mobile First) */
 
+/* ===== RESET & BASE ===== */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+:root {
+    --pink-light:   #fff5f8;
+    --pink-soft:    #fce8f0;
+    --pink-mid:     #f4a7c4;
+    --pink-main:    #c4608a;
+    --pink-deep:    #a0456e;
+    --rose-btn:     #d4708a;
+    --lavender:     #f5f0ff;
+    --lavender-mid: #d4b8e8;
+    --text-main:    #2d2d2d;
+    --text-sub:     #888;
+    --border:       #f0c0d0;
+    --white:        #ffffff;
+    --shadow-pink:  rgba(196, 96, 138, 0.15);
+    --shadow-soft:  rgba(100, 60, 80, 0.10);
+    --font-serif:   'Noto Serif CJK JP', 'Yu Mincho', 'YuMincho', '游明朝体', 'ヒラギノ明朝 Pro', serif;
+    --font-ui:      -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+}
+
+html {
+    scroll-behavior: smooth;
 }
 
 body {
-    font-family: 'Noto Serif CJK JP', 'Yu Mincho', 'YuMincho', '游明朝体', 'ヒラギノ明朝 Pro', serif;
-    line-height: 1.8;
-    color: #2c1810;
-    background: 
-        radial-gradient(circle at 20% 80%, rgba(120, 89, 67, 0.3) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(184, 134, 89, 0.3) 0%, transparent 50%),
-        radial-gradient(circle at 40% 40%, rgba(139, 69, 19, 0.2) 0%, transparent 50%),
-        linear-gradient(135deg, #f4f2e8 0%, #e8dcc0 50%, #d4c4a0 100%);
+    font-family: var(--font-serif);
+    background: var(--pink-light);
+    color: var(--text-main);
     min-height: 100vh;
-    padding: 20px;
-    position: relative;
+    line-height: 1.7;
 }
 
-/* 和風背景パターン */
-body::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: 
-        repeating-linear-gradient(
-            45deg,
-            transparent,
-            transparent 50px,
-            rgba(139, 69, 19, 0.03) 50px,
-            rgba(139, 69, 19, 0.03) 52px
-        );
-    pointer-events: none;
-    z-index: -1;
-}
-
+/* ===== LAYOUT ===== */
 .container {
-    max-width: 1200px;
+    max-width: 480px;
     margin: 0 auto;
-    background: 
-        linear-gradient(145deg, #faf8f0 0%, #f5f1e8 100%);
-    border-radius: 12px;
-    box-shadow: 
-        0 20px 40px rgba(139, 69, 19, 0.15),
-        inset 0 1px 0 rgba(255, 255, 255, 0.9),
-        0 0 0 1px rgba(139, 69, 19, 0.1);
-    overflow: hidden;
-    border: 3px solid #8b4513;
-    position: relative;
-    padding-bottom: 120px; /* フッター用の余白 */
+    padding: 0 0 40px;
+    min-height: 100vh;
 }
 
-.container::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: 
-        repeating-linear-gradient(
-            90deg,
-            transparent 0px,
-            rgba(139, 69, 19, 0.02) 1px,
-            transparent 2px,
-            transparent 20px
-        ),
-        repeating-linear-gradient(
-            0deg,
-            transparent 0px,
-            rgba(139, 69, 19, 0.02) 1px,
-            transparent 2px,
-            transparent 20px
-        );
-    pointer-events: none;
+main {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 }
 
-/* ヘッダー - 和風デザイン */
+/* ===== HEADER ===== */
 header {
-    background: 
-        linear-gradient(135deg, #8b4513 0%, #a0522d 50%, #cd853f 100%);
-    color: #faf8f0;
-    padding: 40px 30px;
+    background: linear-gradient(135deg, #f8b4c8 0%, #e891af 60%, #d470a0 100%);
+    padding: 28px 20px 22px;
     text-align: center;
     position: relative;
-    border-bottom: 4px solid #654321;
+    overflow: hidden;
 }
 
-header::before {
+header::after {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: 
-        repeating-linear-gradient(
-            45deg,
-            rgba(255, 255, 255, 0.1) 0px,
-            rgba(255, 255, 255, 0.1) 2px,
-            transparent 2px,
-            transparent 10px
-        );
-    pointer-events: none;
+    bottom: -1px;
+    left: 0; right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, #fce8f0, #f8b4c8, #fce8f0);
 }
 
 header h1 {
-    font-size: 2.8rem;
-    margin-bottom: 20px;
-    text-shadow: 
-        2px 2px 4px rgba(0, 0, 0, 0.5),
-        0 0 10px rgba(255, 255, 255, 0.3);
-    font-weight: bold;
-    letter-spacing: 0.1em;
-    position: relative;
-    z-index: 1;
+    font-family: var(--font-serif);
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.15em;
+    text-shadow: 0 1px 3px rgba(160, 69, 110, 0.4);
 }
 
-.controls {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    flex-wrap: wrap;
-    position: relative;
-    z-index: 1;
+.header-sub {
+    margin-top: 4px;
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.85);
+    letter-spacing: 0.12em;
+    font-family: var(--font-ui);
 }
 
-/* ヘッダーコントロール */
-.header-controls {
-    margin-top: 25px;
-    padding: 25px;
-    background: rgba(255, 255, 255, 0.15);
-    border-radius: 15px;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    position: relative;
-    z-index: 1;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1.2fr;
-    gap: 25px;
-    align-items: center;
-    box-shadow: 
-        inset 0 2px 6px rgba(255, 255, 255, 0.2),
-        0 4px 12px rgba(139, 69, 19, 0.15);
-}
-
-.speech-rate-control, .pause-control, .pronunciation-control, .intonation-control {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-    padding: 15px;
-    background: rgba(139, 69, 19, 0.1);
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    transition: all 0.3s ease;
-    position: relative;
-}
-
-.speech-rate-control:hover, .pause-control:hover, .pronunciation-control:hover, .intonation-control:hover {
-    background: rgba(139, 69, 19, 0.15);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(139, 69, 19, 0.2);
-}
-
-.bottom-controls {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: 
-        linear-gradient(135deg, #8b4513 0%, #a0522d 50%, #cd853f 100%);
-    border-top: 3px solid #654321;
-    padding: 15px 20px;
-    box-shadow: 0 -5px 15px rgba(139, 69, 19, 0.3);
-    z-index: 1000;
-}
-
-.timer-control {
-    display: flex;
-    flex-direction: row;
+/* ===== BUTTONS ===== */
+.btn {
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
-    position: relative;
+    min-height: 48px;
+    padding: 0 20px;
+    border-radius: 24px;
+    font-family: var(--font-serif);
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+    border: none;
+    text-decoration: none;
+    white-space: nowrap;
 }
 
-.timer-control::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: 
-        radial-gradient(circle at 20% 20%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(139, 69, 19, 0.05) 0%, transparent 50%);
-    pointer-events: none;
+.btn:active {
+    transform: scale(0.96);
 }
 
-.timer-control .timer {
-    font-size: 2rem;
-    font-weight: bold;
-    color: #ffd700;
-    padding: 10px 20px;
-    background: 
-        linear-gradient(135deg, rgba(0, 0, 0, 0.3) 0%, rgba(139, 69, 19, 0.2) 100%);
-    border-radius: 8px;
-    border: 2px solid rgba(255, 215, 0, 0.4);
-    font-family: 'Noto Serif CJK JP', serif;
-    letter-spacing: 0.1em;
-    text-shadow: 
-        1px 1px 2px rgba(0, 0, 0, 0.7),
-        0 0 4px rgba(255, 215, 0, 0.3);
-    min-width: 100px;
-    text-align: center;
-    box-shadow: 
-        inset 0 1px 2px rgba(255, 215, 0, 0.1),
-        0 2px 4px rgba(0, 0, 0, 0.3);
-    position: relative;
-    z-index: 1;
+.btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    transform: none;
 }
 
-.timer-buttons {
+/* メイン操作: 塗りつぶしローズ */
+.btn-primary {
+    background: linear-gradient(135deg, #d4708a, #c4608a);
+    color: #fff;
+    box-shadow: 0 4px 14px var(--shadow-pink);
+}
+.btn-primary:hover:not(:disabled) {
+    box-shadow: 0 6px 20px rgba(196, 96, 138, 0.35);
+    transform: translateY(-1px);
+}
+
+/* サブ操作: 薄ピンクアウトライン */
+.btn-secondary {
+    background: var(--white);
+    color: var(--pink-main);
+    border: 2px solid var(--pink-mid);
+    box-shadow: 0 2px 8px var(--shadow-soft);
+}
+.btn-secondary:hover:not(:disabled) {
+    background: var(--pink-soft);
+    box-shadow: 0 4px 12px var(--shadow-pink);
+    transform: translateY(-1px);
+}
+
+/* アウトライン */
+.btn-outline {
+    background: transparent;
+    color: var(--pink-main);
+    border: 2px solid var(--pink-mid);
+}
+.btn-outline:hover:not(:disabled) {
+    background: var(--pink-soft);
+}
+
+/* 一時停止 */
+.btn-pause {
+    background: linear-gradient(135deg, #f0c050, #e8a030);
+    color: #fff;
+    box-shadow: 0 3px 10px rgba(240, 160, 48, 0.3);
+}
+
+/* ゴースト（停止/リピートなど） */
+.btn-ghost {
+    background: transparent;
+    color: var(--text-sub);
+    border: 1.5px solid #ddd;
+    font-size: 0.85rem;
+    min-height: 40px;
+}
+.btn-ghost:hover:not(:disabled) {
+    background: #f5f5f5;
+    color: var(--text-main);
+}
+
+.btn-large {
+    flex: 1;
+    min-height: 52px;
+    font-size: 1rem;
+}
+
+.btn-sm {
+    min-height: 36px;
+    padding: 0 14px;
+    font-size: 0.82rem;
+    border-radius: 18px;
+}
+
+/* ===== メインアクション ===== */
+.main-actions {
     display: flex;
     gap: 10px;
-    flex-wrap: wrap;
-    justify-content: center;
+}
+
+/* ===== 詩カード ===== */
+.poem-display {}
+
+.poem-card {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 24px 20px 20px;
+    box-shadow:
+        0 4px 20px var(--shadow-pink),
+        0 1px 4px rgba(0,0,0,0.05);
+    border: 1.5px solid var(--border);
     position: relative;
-    z-index: 1;
+    overflow: hidden;
 }
 
-.speech-rate-control label, .pause-control label, .pronunciation-control label, .intonation-control label {
+.poem-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #f8b4c8, #d470a0, #f8b4c8);
+}
+
+.poem-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.poem-number-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 38px;
+    height: 38px;
+    padding: 0 8px;
+    background: linear-gradient(135deg, #fce8f0, #f8b4c8);
+    color: var(--pink-main);
+    border-radius: 12px;
+    font-weight: 700;
     font-size: 1rem;
-    font-weight: bold;
-    color: #faf8f0;
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
-    text-align: center;
-    margin-bottom: 5px;
-    letter-spacing: 0.02em;
+    border: 1.5px solid var(--border);
+    font-family: var(--font-serif);
+    flex-shrink: 0;
 }
 
-/* トグルスイッチのスタイル */
+.poem-author {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-main);
+    font-family: var(--font-serif);
+}
+
+.poem-text {
+    margin-bottom: 12px;
+}
+
+.kami-no-ku,
+.shimo-no-ku {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    line-height: 1.9;
+    letter-spacing: 0.06em;
+    padding: 16px 16px;
+    border-radius: 14px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.kami-no-ku {
+    background: linear-gradient(135deg, #fff8fb, #fce8f0);
+    color: #8b3060;
+    border: 1.5px solid #f4c0d4;
+}
+
+.shimo-no-ku {
+    background: linear-gradient(135deg, #f8f0ff, #ede0f8);
+    color: #604898;
+    border: 1.5px solid #d4b8e8;
+}
+
+.poem-reading,
+.poem-meaning {
+    margin-top: 12px;
+    padding: 12px 14px;
+    background: var(--pink-light);
+    border-radius: 12px;
+    font-size: 0.9rem;
+    line-height: 1.8;
+    color: #555;
+    border: 1px solid var(--border);
+}
+
+.detail-label {
+    display: inline-block;
+    background: var(--pink-mid);
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 1px 8px;
+    border-radius: 8px;
+    margin-right: 6px;
+    vertical-align: middle;
+    font-family: var(--font-ui);
+    letter-spacing: 0.05em;
+}
+
+/* ===== 音声操作 ===== */
+.speech-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+}
+
+/* 一時停止ボタンは全幅 */
+#pauseResumeBtn {
+    grid-column: 1 / -1;
+}
+
+/* 停止・リピートは小さく */
+#stopBtn,
+#repeatBtn {
+    min-height: 40px;
+    font-size: 0.85rem;
+}
+
+/* ===== 設定 (折りたたみ) ===== */
+.settings-section {
+    background: var(--white);
+    border-radius: 16px;
+    border: 1.5px solid var(--border);
+    overflow: hidden;
+}
+
+.settings-toggle {
+    display: flex;
+    align-items: center;
+    padding: 14px 18px;
+    font-family: var(--font-ui);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--pink-main);
+    cursor: pointer;
+    list-style: none;
+    gap: 6px;
+    background: var(--pink-soft);
+    user-select: none;
+}
+
+.settings-toggle::-webkit-details-marker { display: none; }
+
+.settings-toggle::after {
+    content: '▾';
+    margin-left: auto;
+    transition: transform 0.2s;
+}
+
+details[open] .settings-toggle::after {
+    transform: rotate(180deg);
+}
+
+.settings-grid {
+    padding: 14px 16px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.setting-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.setting-row label:first-child {
+    font-family: var(--font-ui);
+    font-size: 0.85rem;
+    color: var(--text-sub);
+    flex-shrink: 0;
+}
+
+.slider-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+}
+
+.slider-wrap input[type="range"] {
+    flex: 1;
+    height: 4px;
+    border-radius: 4px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: linear-gradient(to right, var(--pink-mid), var(--pink-main));
+    outline: none;
+}
+
+.slider-wrap input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--white);
+    border: 2.5px solid var(--pink-main);
+    cursor: pointer;
+    box-shadow: 0 2px 6px var(--shadow-pink);
+}
+
+#speechRateValue,
+#pauseDurationValue {
+    font-family: var(--font-ui);
+    font-size: 0.8rem;
+    color: var(--pink-main);
+    font-weight: 600;
+    min-width: 36px;
+    text-align: right;
+}
+
+/* トグルスイッチ */
 .switch {
     position: relative;
     display: inline-block;
-    width: 60px;
-    height: 30px;
+    width: 48px;
+    height: 26px;
+    flex-shrink: 0;
 }
 
 .switch input {
@@ -264,417 +430,134 @@ header h1 {
 .slider {
     position: absolute;
     cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(255, 255, 255, 0.3);
-    border: 2px solid rgba(255, 255, 255, 0.5);
-    border-radius: 30px;
-    transition: .4s;
+    inset: 0;
+    background: #ddd;
+    border-radius: 26px;
+    transition: .3s;
 }
 
 .slider:before {
     position: absolute;
     content: "";
-    height: 20px;
-    width: 20px;
-    left: 2px;
-    bottom: 2px;
-    background: linear-gradient(135deg, #daa520, #ffd700);
-    border: 1px solid #8b4513;
+    height: 18px;
+    width: 18px;
+    left: 4px;
+    top: 4px;
+    background: #fff;
     border-radius: 50%;
-    transition: .4s;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    transition: .3s;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
 }
 
 input:checked + .slider {
-    background-color: rgba(139, 69, 19, 0.7);
-    border-color: #ffd700;
+    background: linear-gradient(135deg, var(--pink-mid), var(--pink-main));
 }
 
 input:checked + .slider:before {
-    transform: translateX(26px);
-    background: linear-gradient(135deg, #ffd700, #ffed4e);
+    transform: translateX(22px);
 }
 
-.speech-rate-control input[type="range"], .pause-control input[type="range"] {
-    width: 180px;
-    height: 6px;
-    background: rgba(255, 255, 255, 0.25);
-    border-radius: 8px;
-    outline: none;
-    -webkit-appearance: none;
-    appearance: none;
-    border: 1px solid rgba(139, 69, 19, 0.3);
+.history-row {
+    justify-content: flex-start;
+    gap: 10px;
 }
 
-.speech-rate-control input[type="range"]::-webkit-slider-thumb, .pause-control input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 20px;
-    height: 20px;
-    background: linear-gradient(135deg, #daa520, #ffd700);
-    border: 2px solid #8b4513;
-    border-radius: 50%;
-    cursor: pointer;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-}
-
-.speech-rate-control input[type="range"]::-moz-range-thumb, .pause-control input[type="range"]::-moz-range-thumb {
-    width: 20px;
-    height: 20px;
-    background: linear-gradient(135deg, #daa520, #ffd700);
-    border: 2px solid #8b4513;
-    border-radius: 50%;
-    cursor: pointer;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-}
-
-#speechRateValue, #pauseDurationValue {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #ffd700;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-    background: rgba(139, 69, 19, 0.3);
-    padding: 5px 12px;
-    border-radius: 15px;
-    border: 1px solid rgba(255, 215, 0, 0.3);
-}
-
-.rate-labels, .pause-labels {
-    display: flex;
-    justify-content: space-between;
-    width: 180px;
-    font-size: 0.8rem;
-    color: rgba(250, 248, 240, 0.7);
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-    margin-top: 5px;
-}
-
-/* 和風ボタンスタイル */
-.btn {
-    padding: 12px 24px;
-    border: 2px solid;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-family: 'Noto Serif CJK JP', serif;
-    letter-spacing: 0.05em;
-    position: relative;
+/* ===== 歌一覧 ===== */
+.poem-list-section {
+    background: var(--white);
+    border-radius: 16px;
+    border: 1.5px solid var(--border);
     overflow: hidden;
-}
-
-.btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transition: left 0.5s;
-}
-
-.btn:hover::before {
-    left: 100%;
-}
-
-.btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 16px rgba(139, 69, 19, 0.3);
-}
-
-.btn-primary {
-    background: linear-gradient(135deg, #8b4513, #a0522d);
-    border-color: #654321;
-    color: #faf8f0;
-    box-shadow: 0 4px 8px rgba(139, 69, 19, 0.3);
-}
-
-.btn-secondary {
-    background: linear-gradient(135deg, #696969, #708090);
-    border-color: #2f4f4f;
-    color: #faf8f0;
-    box-shadow: 0 4px 8px rgba(47, 79, 79, 0.3);
-}
-
-.btn-danger {
-    background: linear-gradient(135deg, #b22222, #dc143c);
-    border-color: #8b0000;
-    color: #faf8f0;
-    box-shadow: 0 4px 8px rgba(178, 34, 34, 0.3);
-}
-
-.btn-info {
-    background: linear-gradient(135deg, #4682b4, #5f9ea0);
-    border-color: #2f4f4f;
-    color: #faf8f0;
-    box-shadow: 0 4px 8px rgba(70, 130, 180, 0.3);
-}
-
-.btn-success {
-    background: linear-gradient(135deg, #228b22, #32cd32);
-    border-color: #006400;
-    color: #faf8f0;
-    box-shadow: 0 4px 8px rgba(34, 139, 34, 0.3);
-}
-
-.btn-warning {
-    background: linear-gradient(135deg, #daa520, #ffd700);
-    border-color: #b8860b;
-    color: #2c1810;
-    box-shadow: 0 4px 8px rgba(218, 165, 32, 0.3);
-}
-
-.btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
-}
-
-.btn-sm {
-    padding: 8px 16px;
-    font-size: 0.9rem;
-    border-radius: 6px;
-}
-
-/* メインコンテンツ */
-main {
-    padding: 30px;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 30px;
-}
-
-/* 歌表示カード - 伝統的かるた風 */
-.poem-display {
-    grid-column: 1 / -1;
-}
-
-.poem-card {
-    background: 
-        linear-gradient(145deg, #fefdf8 0%, #f8f6f0 100%);
-    border-radius: 12px;
-    padding: 40px;
-    box-shadow: 
-        0 15px 35px rgba(139, 69, 19, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.9),
-        inset 0 -1px 0 rgba(139, 69, 19, 0.1);
-    border: 4px solid #8b4513;
-    margin-bottom: 30px;
-    position: relative;
-    overflow: hidden;
-}
-
-.poem-card::before {
-    content: '';
-    position: absolute;
-    top: 15px;
-    left: 15px;
-    right: 15px;
-    bottom: 15px;
-    border: 2px solid rgba(139, 69, 19, 0.3);
-    border-radius: 8px;
-    pointer-events: none;
-}
-
-.poem-card::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: 
-        radial-gradient(circle at 30% 30%, rgba(218, 165, 32, 0.1) 0%, transparent 40%),
-        radial-gradient(circle at 70% 70%, rgba(139, 69, 19, 0.05) 0%, transparent 40%);
-    pointer-events: none;
-}
-
-.poem-number {
-    text-align: center;
-    font-size: 1.4rem;
-    color: #8b4513;
-    margin-bottom: 15px;
-    font-weight: bold;
-    position: relative;
-    z-index: 1;
-}
-
-.poem-author {
-    text-align: center;
-    font-size: 1.6rem;
-    font-weight: bold;
-    color: #2c1810;
-    margin-bottom: 30px;
-    padding: 15px 20px;
-    background: 
-        linear-gradient(135deg, rgba(218, 165, 32, 0.2) 0%, rgba(184, 134, 89, 0.2) 100%);
-    border-radius: 25px;
-    border: 2px solid rgba(139, 69, 19, 0.3);
-    position: relative;
-    z-index: 1;
-}
-
-.poem-text {
-    text-align: center;
-    margin-bottom: 25px;
-    position: relative;
-    z-index: 1;
-}
-
-.kami-no-ku, .shimo-no-ku {
-    font-size: 2rem;
-    line-height: 2;
-    margin: 20px 0;
-    padding: 25px;
-    border-radius: 12px;
-    font-weight: 500;
-    letter-spacing: 0.05em;
-    position: relative;
-    font-family: 'Noto Serif CJK JP', 'Yu Mincho', serif;
-}
-
-.kami-no-ku {
-    background: 
-        linear-gradient(135deg, #fff8dc 0%, #f5deb3 100%);
-    color: #8b4513;
-    border: 3px solid #daa520;
-    box-shadow: 
-        inset 0 2px 4px rgba(218, 165, 32, 0.1),
-        0 4px 8px rgba(139, 69, 19, 0.2);
-}
-
-.shimo-no-ku {
-    background: 
-        linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%);
-    color: #2f4f4f;
-    border: 3px solid #4682b4;
-    box-shadow: 
-        inset 0 2px 4px rgba(70, 130, 180, 0.1),
-        0 4px 8px rgba(47, 79, 79, 0.2);
-}
-
-.poem-reading, .poem-meaning {
-    margin: 20px 0;
-    padding: 20px;
-    background: 
-        linear-gradient(135deg, rgba(245, 245, 220, 0.8) 0%, rgba(250, 235, 215, 0.8) 100%);
-    border-radius: 12px;
-    border: 2px solid rgba(139, 69, 19, 0.3);
-    position: relative;
-    z-index: 1;
-    font-size: 1.1rem;
-    line-height: 1.8;
-}
-
-.poem-reading strong, .poem-meaning strong {
-    color: #8b4513;
-    font-size: 1.2rem;
-}
-
-
-/* 歌一覧 - 和風 */
-.poem-list {
-    grid-column: 1 / -1;
-    background: 
-        linear-gradient(145deg, #fefdf8 0%, #f8f6f0 100%);
-    border-radius: 12px;
-    padding: 30px;
-    box-shadow: 
-        0 15px 35px rgba(139, 69, 19, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.9);
-    border: 3px solid #8b4513;
-    position: relative;
-}
-
-.poem-list h3 {
-    color: #2c1810;
-    margin-bottom: 25px;
-    font-size: 1.8rem;
-    font-weight: bold;
-    text-align: center;
-    padding: 15px;
-    background: 
-        linear-gradient(135deg, rgba(218, 165, 32, 0.2) 0%, rgba(184, 134, 89, 0.2) 100%);
-    border-radius: 10px;
-    border: 2px solid rgba(139, 69, 19, 0.3);
 }
 
 .list-controls {
-    margin-bottom: 20px;
+    padding: 12px 14px 10px;
+    background: var(--pink-soft);
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 10px;
+    border-bottom: 1px solid var(--border);
 }
 
 .search-box {
+    display: flex;
+    align-items: center;
+    background: var(--white);
+    border-radius: 24px;
+    padding: 0 14px;
+    border: 1.5px solid var(--border);
+    gap: 6px;
+}
+
+.search-icon {
+    font-size: 0.85rem;
+    color: var(--pink-mid);
+}
+
+.search-box input {
     flex: 1;
+    border: none;
+    outline: none;
+    padding: 10px 0;
+    font-family: var(--font-serif);
+    font-size: 0.9rem;
+    color: var(--text-main);
+    background: transparent;
+}
+
+.search-box input::placeholder {
+    color: #ccc;
 }
 
 .sort-buttons {
     display: flex;
-    gap: 10px;
-    justify-content: center;
+    gap: 6px;
     flex-wrap: wrap;
 }
 
 .sort-btn {
-    min-width: 90px;
-    transition: all 0.3s ease;
+    padding: 5px 12px;
+    border-radius: 16px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    font-family: var(--font-ui);
+    cursor: pointer;
+    background: var(--white);
+    color: var(--text-sub);
+    border: 1.5px solid #eee;
+    transition: all 0.15s;
+    white-space: nowrap;
 }
 
 .sort-btn.active {
-    background: linear-gradient(135deg, #8b4513, #a0522d) !important;
-    color: #faf8f0 !important;
-    transform: translateY(-1px);
-    box-shadow: 0 6px 12px rgba(139, 69, 19, 0.4) !important;
+    background: var(--pink-main);
+    color: #fff;
+    border-color: var(--pink-main);
+    box-shadow: 0 2px 8px var(--shadow-pink);
 }
 
-.search-box input {
-    width: 100%;
-    padding: 15px;
-    border: 2px solid rgba(139, 69, 19, 0.3);
-    border-radius: 10px;
-    font-size: 1rem;
-    background: rgba(255, 255, 255, 0.9);
-    transition: all 0.3s ease;
-    font-family: 'Noto Serif CJK JP', serif;
-}
-
-.search-box input:focus {
-    outline: none;
-    border-color: #8b4513;
-    box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.1);
-    background: #fff;
+.sort-btn:active {
+    transform: scale(0.95);
 }
 
 .list-container {
     max-height: 400px;
     overflow-y: auto;
-    border: 2px solid rgba(139, 69, 19, 0.3);
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.5);
+    -webkit-overflow-scrolling: touch;
 }
 
 .poem-item {
     display: flex;
     align-items: center;
-    padding: 15px;
-    border-bottom: 1px solid rgba(139, 69, 19, 0.1);
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--pink-light);
     cursor: pointer;
-    transition: all 0.3s ease;
-    font-family: 'Noto Serif CJK JP', serif;
+    transition: background 0.15s;
+    gap: 12px;
 }
 
-.poem-item:hover {
-    background: 
-        linear-gradient(135deg, rgba(218, 165, 32, 0.1) 0%, rgba(184, 134, 89, 0.1) 100%);
-    transform: translateX(5px);
-    border-left: 4px solid #8b4513;
+.poem-item:active {
+    background: var(--pink-soft);
 }
 
 .poem-item:last-child {
@@ -682,617 +565,480 @@ main {
 }
 
 .poem-item-number {
-    min-width: 60px;
-    font-weight: bold;
-    color: #8b4513;
-    text-align: center;
-    font-size: 1.2rem;
-    background: 
-        linear-gradient(135deg, rgba(218, 165, 32, 0.2) 0%, rgba(184, 134, 89, 0.2) 100%);
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #fce8f0, #f8b4c8);
+    color: var(--pink-main);
+    font-weight: 700;
+    font-size: 0.85rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 2px solid rgba(139, 69, 19, 0.3);
+    flex-shrink: 0;
+    border: 1.5px solid var(--border);
+    font-family: var(--font-serif);
 }
 
 .poem-item-content {
     flex: 1;
-    margin-left: 20px;
+    min-width: 0;
 }
 
 .poem-item-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 8px;
+    margin-bottom: 3px;
 }
 
 .poem-item-author {
-    font-weight: bold;
-    color: #2c1810;
-    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-main);
+    font-size: 0.9rem;
+    font-family: var(--font-serif);
 }
 
 .poem-item-season {
-    font-size: 0.8rem;
-    padding: 2px 8px;
-    border-radius: 12px;
-    font-weight: bold;
-    min-width: 32px;
-    text-align: center;
-    border: 1px solid rgba(0,0,0,0.1);
+    font-size: 0.7rem;
+    padding: 1px 7px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-family: var(--font-ui);
+    border: 1px solid rgba(0,0,0,0.08);
+    flex-shrink: 0;
 }
 
 .poem-item-text {
-    color: #5d4e37;
-    font-size: 0.95rem;
-    margin-top: 5px;
+    color: var(--text-sub);
+    font-size: 0.82rem;
+    font-family: var(--font-serif);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
-/* レスポンシブデザイン - スマホ最適化 */
-@media (max-width: 768px) {
-    body {
-        padding: 10px;
-    }
-    
-    .container {
-        margin: 5px;
-        border-radius: 15px;
-        padding-bottom: 100px; /* スマホ用フッター用余白を調整 */
-    }
-    
-    header {
-        padding: 25px 15px;
-    }
-    
-    header h1 {
-        font-size: 1.8rem;
-        margin-bottom: 15px;
-    }
-    
-    .controls {
-        gap: 6px;
-        justify-content: center;
-        flex-wrap: wrap;
-    }
-    
-    .btn {
-        padding: 10px 14px;
-        font-size: 0.85rem;
-        min-width: 75px;
-        flex: 1 1 calc(50% - 6px);
-        max-width: 140px;
-    }
-    
-    main {
-        padding: 20px;
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-    
-    .poem-card {
-        padding: 25px;
-    }
-    
-    .kami-no-ku, .shimo-no-ku {
-        font-size: 1.4rem;
-        padding: 15px;
-    }
-    
-    .bottom-controls {
-        padding: 10px 15px;
-    }
-    
-    .timer-control {
-        flex-direction: column;
-        gap: 10px;
-    }
-    
-    .timer-control .timer {
-        font-size: 1.6rem;
-        padding: 8px 15px;
-        min-width: 90px;
-    }
-    
-    .timer-buttons {
-        gap: 8px;
-    }
-    
-    .timer-buttons .btn {
-        padding: 6px 10px;
-        font-size: 0.8rem;
-    }
-    
-    .poem-list {
-        padding: 20px;
-    }
-    
-    .list-controls {
-        gap: 10px;
-    }
-    
-    .sort-buttons {
-        gap: 5px;
-    }
-    
-    .sort-btn {
-        min-width: 70px;
-        font-size: 0.8rem;
-        padding: 6px 12px;
-    }
-    
-    .settings-controls {
-        margin: 20px 10px;
-        padding: 20px;
-    }
-    
-    .settings-controls h3 {
-        font-size: 1.3rem;
-        margin-bottom: 20px;
-    }
-    
-    .settings-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-    
-    .speech-rate-control input[type="range"], .pause-control input[type="range"] {
-        width: 100%;
-        max-width: 300px;
-    }
-    
-    .rate-labels, .pause-labels {
-        width: 100%;
-        max-width: 300px;
-    }
-}
+/* ===== 季節カラー（ソフト版） ===== */
+/* applySeasonColor() で inline style で適用されるため、
+   デフォルト定義はしない。script.js 側で設定済み。 */
 
-@media (max-width: 480px) {
-    body {
-        padding: 8px;
-    }
-    
-    .container {
-        padding-bottom: 90px; /* 小さなスマホ用フッター用余白 */
-    }
-    
-    header {
-        padding: 20px 12px;
-    }
-    
-    header h1 {
-        font-size: 1.6rem;
-    }
-    
-    .controls {
-        gap: 4px;
-    }
-    
-    .btn {
-        padding: 8px 10px;
-        font-size: 0.8rem;
-        min-width: 65px;
-        flex: 1 1 calc(50% - 4px);
-        max-width: 120px;
-    }
-    
-    .poem-card {
-        padding: 18px;
-    }
-    
-    .kami-no-ku, .shimo-no-ku {
-        font-size: 1.2rem;
-        padding: 12px;
-    }
-    
-    .bottom-controls {
-        padding: 8px 10px;
-    }
-    
-    .timer-control .timer {
-        font-size: 1.4rem;
-        padding: 6px 12px;
-        min-width: 80px;
-    }
-    
-    .timer-buttons {
-        gap: 6px;
-    }
-    
-    .timer-buttons .btn {
-        padding: 5px 8px;
-        font-size: 0.7rem;
-    }
-    
-    .settings-controls {
-        margin: 15px 5px;
-        padding: 15px;
-    }
-    
-    .settings-controls h3 {
-        font-size: 1.2rem;
-        margin-bottom: 15px;
-    }
-    
-    .settings-grid {
-        gap: 15px;
-    }
-}
-
-/* 設定コントロール - 歌一覧の下に配置 */
-.settings-controls {
-    margin: 30px 20px;
-    padding: 30px;
-    background: 
-        linear-gradient(145deg, #faf8f0 0%, #f5f1e8 100%);
-    border-radius: 15px;
-    border: 3px solid rgba(139, 69, 19, 0.2);
-    box-shadow: 
-        0 10px 25px rgba(139, 69, 19, 0.1),
-        inset 0 1px 0 rgba(255, 255, 255, 0.7);
-    position: relative;
-}
-
-.settings-controls h3 {
-    color: #8b4513;
-    font-size: 1.5rem;
-    margin-bottom: 25px;
-    text-align: center;
-    font-weight: bold;
-    text-shadow: 1px 1px 2px rgba(139, 69, 19, 0.2);
-}
-
-.settings-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 25px;
-    align-items: start;
-}
-
-/* 新機能のスタイル */
-.extra-controls {
-    margin-top: 20px;
-    padding: 20px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 15px;
-}
-
-.dark-mode-control {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.dark-mode-control label {
-    color: #faf8f0;
-    font-weight: bold;
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
-}
-
-.history-control {
-    display: flex;
-    gap: 10px;
-}
-
-/* モーダルスタイル */
+/* ===== モーダル ===== */
 .modal {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7);
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-end;
     z-index: 1000;
+    backdrop-filter: blur(4px);
 }
 
 .modal-content {
-    background: #faf8f0;
-    border-radius: 15px;
-    padding: 30px;
-    max-width: 600px;
-    width: 90%;
-    max-height: 80%;
+    background: var(--white);
+    border-radius: 24px 24px 0 0;
+    padding: 24px 20px;
+    width: 100%;
+    max-width: 480px;
+    max-height: 80vh;
     overflow-y: auto;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-    border: 3px solid #8b4513;
+    box-shadow: 0 -8px 30px rgba(0,0,0,0.15);
 }
 
 .modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
-    padding-bottom: 15px;
-    border-bottom: 2px solid rgba(139, 69, 19, 0.3);
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1.5px solid var(--border);
 }
 
 .modal-header h3 {
-    color: #2c1810;
-    font-size: 1.5rem;
-    margin: 0;
+    font-family: var(--font-serif);
+    font-size: 1.1rem;
+    color: var(--pink-main);
+}
+
+.btn-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--pink-soft);
+    color: var(--pink-main);
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
 }
 
 .history-list {
-    max-height: 400px;
-    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 .history-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px;
-    border-bottom: 1px solid rgba(139, 69, 19, 0.2);
+    padding: 12px;
+    border-radius: 12px;
+    background: var(--pink-light);
     cursor: pointer;
-    transition: all 0.3s ease;
-    border-radius: 8px;
-    margin-bottom: 5px;
+    border: 1px solid var(--border);
+    transition: background 0.15s;
 }
 
-.history-item:hover {
-    background: linear-gradient(135deg, rgba(218, 165, 32, 0.1) 0%, rgba(184, 134, 89, 0.1) 100%);
-    transform: translateX(5px);
+.history-item:active {
+    background: var(--pink-soft);
 }
 
 .history-poem-info {
     display: flex;
     align-items: center;
-    gap: 15px;
-    flex: 1;
+    gap: 8px;
+    margin-bottom: 4px;
 }
 
 .history-number {
-    background: linear-gradient(135deg, rgba(218, 165, 32, 0.3) 0%, rgba(184, 134, 89, 0.3) 100%);
-    color: #8b4513;
-    padding: 5px 10px;
-    border-radius: 15px;
-    font-weight: bold;
-    min-width: 40px;
-    text-align: center;
-    border: 1px solid rgba(139, 69, 19, 0.3);
+    background: linear-gradient(135deg, #fce8f0, #f8b4c8);
+    color: var(--pink-main);
+    padding: 2px 8px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.82rem;
+    border: 1px solid var(--border);
+    font-family: var(--font-serif);
+    flex-shrink: 0;
 }
 
 .history-author {
-    font-weight: bold;
-    color: #2c1810;
-    min-width: 80px;
+    font-weight: 600;
+    font-size: 0.88rem;
+    color: var(--text-main);
+    font-family: var(--font-serif);
+    flex-shrink: 0;
 }
 
 .history-text {
-    color: #5d4e37;
-    flex: 1;
+    font-size: 0.82rem;
+    color: var(--text-sub);
+    font-family: var(--font-serif);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .history-time {
-    font-size: 0.9rem;
-    color: #8b4513;
-    white-space: nowrap;
+    font-size: 0.75rem;
+    color: #bbb;
+    font-family: var(--font-ui);
+    text-align: right;
 }
 
 .no-history {
     text-align: center;
-    padding: 40px;
-    color: #8b4513;
-    font-size: 1.1rem;
+    padding: 32px 20px;
+    color: var(--text-sub);
+    font-size: 0.9rem;
+    font-family: var(--font-ui);
 }
 
-/* ダークモードスタイル */
+/* ===== PWAインストール ===== */
+.install-btn {
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    z-index: 999;
+    background: linear-gradient(135deg, #d4708a, #c4608a);
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-size: 0.82rem;
+    font-family: var(--font-ui);
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 14px var(--shadow-pink);
+}
+
+.ios-install-banner {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--pink-main);
+    color: #fff;
+    padding: 16px 20px;
+    border-radius: 16px;
+    text-align: center;
+    z-index: 999;
+    max-width: 320px;
+    width: calc(100% - 40px);
+    font-size: 0.85rem;
+    font-family: var(--font-ui);
+    box-shadow: 0 8px 24px rgba(196,96,138,0.4);
+}
+
+.ios-install-banner p { margin-bottom: 6px; }
+
+.ios-install-banner button {
+    background: #fff;
+    color: var(--pink-main);
+    border: none;
+    padding: 6px 16px;
+    border-radius: 10px;
+    margin-top: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* ===== ダークモード ===== */
 .dark-mode {
-    background: 
-        radial-gradient(circle at 20% 80%, rgba(40, 40, 40, 0.4) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(60, 60, 60, 0.4) 0%, transparent 50%),
-        radial-gradient(circle at 40% 40%, rgba(30, 30, 30, 0.3) 0%, transparent 50%),
-        linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #3d3d3d 100%);
-    color: #e0e0e0;
+    background: #1a1a2e;
+    color: #e8e0f0;
 }
 
 .dark-mode .container {
-    background: linear-gradient(145deg, #2a2a2a 0%, #1f1f1f 100%);
-    border-color: #555;
-    box-shadow: 
-        0 20px 40px rgba(0, 0, 0, 0.4),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1),
-        0 0 0 1px rgba(100, 100, 100, 0.2);
+    background: #1a1a2e;
 }
 
 .dark-mode header {
-    background: linear-gradient(135deg, #3a3a3a 0%, #4a4a4a 50%, #5a5a5a 100%);
-    color: #e0e0e0;
-    border-bottom-color: #666;
+    background: linear-gradient(135deg, #3a2a3e 0%, #2e1e32 100%);
+}
+
+.dark-mode header h1 {
+    color: #f4c0d8;
+}
+
+.dark-mode .header-sub {
+    color: rgba(244,192,216,0.75);
 }
 
 .dark-mode .poem-card {
-    background: linear-gradient(145deg, #2a2a2a 0%, #1f1f1f 100%);
-    border-color: #555;
-    color: #e0e0e0;
-    box-shadow: 
-        0 15px 35px rgba(0, 0, 0, 0.4),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1),
-        inset 0 -1px 0 rgba(100, 100, 100, 0.2);
+    background: #252038;
+    border-color: #4a3a58;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
 }
 
 .dark-mode .poem-card::before {
-    border-color: rgba(100, 100, 100, 0.3);
+    background: linear-gradient(90deg, #6a4a78, #9a5888, #6a4a78);
 }
 
-.dark-mode .poem-number {
-    color: #daa520;
+.dark-mode .poem-number-badge {
+    background: linear-gradient(135deg, #3a2a48, #4a3a58);
+    color: #d4a0c8;
+    border-color: #5a4a68;
 }
 
-.dark-mode .poem-author {
-    color: #e0e0e0;
-    background: linear-gradient(135deg, rgba(100, 100, 100, 0.3) 0%, rgba(80, 80, 80, 0.3) 100%);
-    border-color: rgba(100, 100, 100, 0.4);
-}
+.dark-mode .poem-author { color: #e8e0f0; }
 
 .dark-mode .kami-no-ku {
-    background: linear-gradient(135deg, #3a3a2a 0%, #2f2f1f 100%);
-    color: #daa520;
-    border-color: #666;
+    background: linear-gradient(135deg, #2e1e2e, #3a2a3a);
+    color: #e8a0c0;
+    border-color: #5a3a5a;
 }
 
 .dark-mode .shimo-no-ku {
-    background: linear-gradient(135deg, #2a2a3a 0%, #1f1f2f 100%);
-    color: #87ceeb;
-    border-color: #666;
+    background: linear-gradient(135deg, #1e1e3a, #2a2a4a);
+    color: #c0a0e8;
+    border-color: #4a3a6a;
 }
 
-.dark-mode .poem-reading, .dark-mode .poem-meaning {
-    background: linear-gradient(135deg, rgba(50, 50, 40, 0.8) 0%, rgba(40, 40, 30, 0.8) 100%);
-    border-color: rgba(100, 100, 100, 0.4);
-    color: #e0e0e0;
+.dark-mode .poem-reading,
+.dark-mode .poem-meaning {
+    background: #2a1e3a;
+    border-color: #4a3a58;
+    color: #c0b0d0;
 }
 
-.dark-mode .poem-reading strong, .dark-mode .poem-meaning strong {
-    color: #daa520;
+.dark-mode .detail-label {
+    background: #8a4880;
 }
 
-.dark-mode .poem-list {
-    background: linear-gradient(145deg, #2a2a2a 0%, #1f1f1f 100%);
-    border-color: #555;
+.dark-mode .btn-secondary {
+    background: #2a1e3a;
+    color: #d4a0c8;
+    border-color: #5a3a5a;
 }
 
-.dark-mode .poem-list h3 {
-    color: #e0e0e0;
-    background: linear-gradient(135deg, rgba(100, 100, 100, 0.3) 0%, rgba(80, 80, 80, 0.3) 100%);
-    border-color: rgba(100, 100, 100, 0.4);
+.dark-mode .btn-outline {
+    color: #d4a0c8;
+    border-color: #5a3a5a;
+}
+
+.dark-mode .btn-ghost {
+    color: #888;
+    border-color: #444;
+}
+
+.dark-mode .settings-section {
+    background: #252038;
+    border-color: #4a3a58;
+}
+
+.dark-mode .settings-toggle {
+    background: #2e2240;
+    color: #d4a0c8;
+}
+
+.dark-mode .setting-row label:first-child { color: #9080a0; }
+
+.dark-mode .slider-wrap input[type="range"] {
+    background: linear-gradient(to right, #7a4a78, #9a5888);
+}
+
+.dark-mode .slider-wrap input[type="range"]::-webkit-slider-thumb {
+    background: #252038;
+    border-color: #a868a0;
+}
+
+.dark-mode #speechRateValue,
+.dark-mode #pauseDurationValue {
+    color: #d4a0c8;
+}
+
+.dark-mode .slider {
+    background: #444;
+}
+
+.dark-mode input:checked + .slider {
+    background: linear-gradient(135deg, #8a5898, #a868a0);
+}
+
+.dark-mode .poem-list-section {
+    background: #252038;
+    border-color: #4a3a58;
+}
+
+.dark-mode .list-controls {
+    background: #2e2240;
+    border-color: #4a3a58;
+}
+
+.dark-mode .search-box {
+    background: #1e1830;
+    border-color: #4a3a58;
 }
 
 .dark-mode .search-box input {
-    background: #333;
-    color: #e0e0e0;
-    border-color: #666;
+    color: #e8e0f0;
 }
 
-.dark-mode .search-box input:focus {
-    background: #3a3a3a;
-    border-color: #888;
+.dark-mode .search-box input::placeholder { color: #665577; }
+
+.dark-mode .sort-btn {
+    background: #2a1e3a;
+    color: #9080a0;
+    border-color: #4a3a58;
 }
 
-.dark-mode .list-container {
-    background: rgba(30, 30, 30, 0.7);
-    border-color: rgba(100, 100, 100, 0.4);
+.dark-mode .sort-btn.active {
+    background: #8a5898;
+    border-color: #8a5898;
+    color: #fff;
 }
+
+.dark-mode .list-container { background: #1e1830; }
 
 .dark-mode .poem-item {
-    color: #e0e0e0;
-    border-bottom-color: rgba(100, 100, 100, 0.2);
+    border-color: #2e2240;
 }
 
-.dark-mode .poem-item:hover {
-    background: linear-gradient(135deg, rgba(100, 100, 100, 0.2) 0%, rgba(80, 80, 80, 0.2) 100%);
-    border-left-color: #daa520;
-}
+.dark-mode .poem-item:active { background: #2e2240; }
 
 .dark-mode .poem-item-number {
-    background: linear-gradient(135deg, rgba(100, 100, 100, 0.3) 0%, rgba(80, 80, 80, 0.3) 100%);
-    color: #daa520;
-    border-color: rgba(100, 100, 100, 0.4);
+    background: linear-gradient(135deg, #2e1e3a, #3a2a4a);
+    color: #c090c0;
+    border-color: #5a3a5a;
 }
 
-.dark-mode .poem-item-author {
-    color: #e0e0e0;
-}
-
-.dark-mode .poem-item-text {
-    color: #ccc;
-}
-
-.dark-mode .header-controls {
-    background: rgba(0, 0, 0, 0.3);
-    border-color: rgba(100, 100, 100, 0.4);
-}
-
-.dark-mode .extra-controls {
-    background: rgba(0, 0, 0, 0.2);
-    border-color: rgba(100, 100, 100, 0.3);
-}
+.dark-mode .poem-item-author { color: #e8e0f0; }
+.dark-mode .poem-item-text { color: #9080a0; }
 
 .dark-mode .modal-content {
-    background: #2a2a2a;
-    border-color: #666;
-    color: #e0e0e0;
+    background: #252038;
+    color: #e8e0f0;
 }
 
-.dark-mode .modal-header {
-    border-bottom-color: rgba(100, 100, 100, 0.4);
-}
+.dark-mode .modal-header { border-color: #4a3a58; }
+.dark-mode .modal-header h3 { color: #d4a0c8; }
 
-.dark-mode .modal-header h3 {
-    color: #e0e0e0;
+.dark-mode .btn-icon {
+    background: #3a2a48;
+    color: #d4a0c8;
 }
 
 .dark-mode .history-item {
-    border-bottom-color: rgba(100, 100, 100, 0.3);
+    background: #1e1830;
+    border-color: #3a2a4a;
 }
 
-.dark-mode .history-item:hover {
-    background: linear-gradient(135deg, rgba(100, 100, 100, 0.2) 0%, rgba(80, 80, 80, 0.2) 100%);
-}
+.dark-mode .history-item:active { background: #2e2240; }
 
 .dark-mode .history-number {
-    background: linear-gradient(135deg, rgba(100, 100, 100, 0.4) 0%, rgba(80, 80, 80, 0.4) 100%);
-    color: #daa520;
-    border-color: rgba(100, 100, 100, 0.5);
+    background: linear-gradient(135deg, #2e1e3a, #3a2a48);
+    color: #c090c0;
+    border-color: #5a3a5a;
 }
 
-.dark-mode .history-author {
-    color: #e0e0e0;
-}
+.dark-mode .history-author { color: #e8e0f0; }
+.dark-mode .history-text { color: #8a7898; }
+.dark-mode .history-time { color: #665577; }
+.dark-mode .no-history { color: #8a7898; }
 
-.dark-mode .history-text {
-    color: #ccc;
-}
-
-.dark-mode .history-time {
-    color: #daa520;
-}
-
-.dark-mode .no-history {
-    color: #daa520;
-}
-
-@media (max-width: 768px) {
-    .extra-controls {
-        flex-direction: column;
-        gap: 10px;
+/* ===== タブレット/デスクトップ対応 ===== */
+@media (min-width: 480px) {
+    .container {
+        box-shadow: 0 0 40px rgba(196,96,138,0.12);
     }
-    
-    .history-control {
-        width: 100%;
-        justify-content: center;
+
+    header {
+        padding: 32px 24px 26px;
     }
-    
-    .modal-content {
+
+    header h1 {
+        font-size: 1.9rem;
+    }
+
+    main {
         padding: 20px;
-        width: 95%;
+        gap: 20px;
     }
-    
-    .history-poem-info {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 8px;
+
+    .poem-card {
+        padding: 28px 24px 22px;
     }
-    
-    .history-item {
-        flex-direction: column;
-        align-items: flex-start;
+
+    .kami-no-ku,
+    .shimo-no-ku {
+        font-size: 1.7rem;
     }
-    
-    .history-time {
-        align-self: flex-end;
-        margin-top: 5px;
+}
+
+@media (min-width: 768px) {
+    body {
+        background: linear-gradient(135deg, #fce8f0 0%, #fff5f8 50%, #fce8f0 100%);
+    }
+
+    .container {
+        margin: 20px auto;
+        border-radius: 24px;
+        min-height: auto;
+        padding-bottom: 40px;
+    }
+
+    header {
+        border-radius: 24px 24px 0 0;
+    }
+
+    .modal {
+        align-items: center;
+    }
+
+    .modal-content {
+        border-radius: 24px;
+        max-height: 70vh;
     }
 }
