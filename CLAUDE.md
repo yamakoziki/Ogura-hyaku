@@ -86,11 +86,13 @@ npm start          # launches Electron window
 npm run build
 ```
 
-The GitHub Actions workflow (`.github/workflows/build.yml`) triggers on `v*` tags and builds for macOS, Linux, and Windows using this same swap. It uses `GH_TOKEN` secret for release uploads.
+The GitHub Actions workflow (`.github/workflows/build.yml`) triggers on `v*` tags (and `workflow_dispatch`) and builds for macOS, Linux, and Windows using this same swap. It uses `GH_TOKEN` secret for release uploads.
+
+> **Note**: `main.js:13` references `icon.png` for the Electron window icon, but only `icon-192.png`, `icon-512.png`, and `icon-preview.png` exist in the repo. Electron silently ignores a missing icon file, but supply `icon.png` if a proper taskbar icon is needed.
 
 ## PWA / Service Worker
 
-`sw.js` caches all static assets under a versioned `CACHE_NAME` (currently `ogura-hyaku-v3`). When modifying assets, increment this version string to force cache invalidation on next visit.
+`sw.js` caches all static assets under a versioned `CACHE_NAME` (currently `ogura-hyaku-v4`). When modifying assets, increment this version string to force cache invalidation on next visit.
 
 ## Design System
 
